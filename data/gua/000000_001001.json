@@ -2,6 +2,7 @@
   "000000": {
     "name": "坤为地",
     "alternate_name": "坤卦",
+    "symbol": "䷁",
     "description": "元亨利牝马之贞。",
     "yaoci": [
       "初六，履霜，坚冰至。",
@@ -15,6 +16,7 @@
   "000001": {
     "name": "地雷复",
     "alternate_name": "复卦",
+    "symbol": "䷗",
     "description": "亨。出入无疾，朋来无咎。反复其道，七日来复。利有攸往。",
     "yaoci": [
       "初九，不远复，无祗悔，元吉。",
@@ -28,6 +30,7 @@
   "000010": {
     "name": "地水师",
     "alternate_name": "师卦",
+    "symbol": "䷆",
     "description": "贞，丈人吉，无咎。",
     "yaoci": [
       "初六，师出以律，否臧凶。",
@@ -41,6 +44,7 @@
   "000011": {
     "name": "地泽临",
     "alternate_name": "临卦",
+    "symbol": "䷒",
     "description": "元亨，利贞。至于八月有凶。",
     "yaoci": [
       "初九，咸临，贞吉。",
@@ -54,6 +58,7 @@
   "000100": {
     "name": "地山谦",
     "alternate_name": "谦卦",
+    "symbol": "䷎",
     "description": "亨。君子有终。",
     "yaoci": [
       "初六，谦谦君子，用涉大川，吉。",
@@ -67,6 +72,7 @@
   "000101": {
     "name": "地火明夷",
     "alternate_name": "明夷卦",
+    "symbol": "䷣",
     "description": "利艰贞。",
     "yaoci": [
       "初九，明夷于飞，垂其翼。君子于行，三日不食，有攸往，主人有言。",
@@ -80,6 +86,7 @@
   "000110": {
     "name": "地风升",
     "alternate_name": "升卦",
+    "symbol": "䷭",
     "description": "元亨，用见大人，勿恤，南征吉。",
     "yaoci": [
       "初六，允升，大吉。",
@@ -93,6 +100,7 @@
   "000111": {
     "name": "地天泰",
     "alternate_name": "泰卦",
+    "symbol": "䷊",
     "description": "小往大来，吉亨。",
     "yaoci": [
       "初九，拔茅茹，以其汇，征吉。",
@@ -106,6 +114,7 @@
   "001000": {
     "name": "雷地豫",
     "alternate_name": "豫卦",
+    "symbol": "䷏",
     "description": "利建侯行师。",
     "yaoci": [
       "初六，鸣豫，凶。",
@@ -119,6 +128,7 @@
   "001001": {
     "name": "震为雷",
     "alternate_name": "震卦",
+    "symbol": "䷲",
     "description": "亨。震来虩虩，笑言哑哑。震惊百里，不丧匕鬯。",
     "yaoci": [
       "初九，震来虩虩，后笑言哑哑，吉。",

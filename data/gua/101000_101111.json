@@ -2,6 +2,7 @@
   "101000": {
     "name": "火地晋",
     "alternate_name": "晋卦",
+    "symbol": "䷢",
     "description": "康侯用锡马蕃庶，昼日三接。",
     "yaoci": [
       "初六，晋如摧如，贞吉，罔孚，裕无咎。",
@@ -15,6 +16,7 @@
   "101001": {
     "name": "火雷噬嗑",
     "alternate_name": "噬嗑卦",
+    "symbol": "䷔",
     "description": "亨。利用狱。",
     "yaoci": [
       "初九，屦校灭趾，无咎。",
@@ -28,6 +30,7 @@
   "101010": {
     "name": "火水未济",
     "alternate_name": "未济卦",
+    "symbol": "䷿",
     "description": "亨。小狐汔济，濡其尾，无攸利。",
     "yaoci": [
       "初六，未济，征凶，利涉大川。",
@@ -41,6 +44,7 @@
   "101011": {
     "name": "火泽睽",
     "alternate_name": "睽卦",
+    "symbol": "䷥",
     "description": "小事吉。",
     "yaoci": [
       "初九，悔亡。丧马勿逐，自复；见恶人无咎。",
@@ -54,6 +58,7 @@
   "101100": {
     "name": "火山旅",
     "alternate_name": "旅卦",
+    "symbol": "䷷",
     "description": "小亨。旅贞吉。",
     "yaoci": [
       "初六，旅琐琐，斯其所取灾。",
@@ -65,8 +70,9 @@
     ]
   },
   "101101": {
-    "name": "火火离",
+    "name": "离为火",
     "alternate_name": "离卦",
+    "symbol": "䷝",
     "description": "利贞，亨。畜牝牛吉。",
     "yaoci": [
       "初九，履错然，敬之无咎。",
@@ -80,6 +86,7 @@
   "101110": {
     "name": "火风鼎",
     "alternate_name": "鼎卦",
+    "symbol": "䷱",
     "description": "元吉，亨。",
     "yaoci": [
       "初六，鼎颠趾，利出否。得妾以其子，无咎。",
@@ -93,6 +100,7 @@
   "101111": {
     "name": "火天大有",
     "alternate_name": "大有卦",
+    "symbol": "䷍",
     "description": "元亨。",
     "yaoci": [
       "初九，无交害，匪咎。艰则无咎。",
