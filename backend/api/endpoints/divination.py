@@ -4,14 +4,14 @@
 """
 from fastapi import APIRouter, HTTPException
 
-from ...core.models import (
+from core.models import (
     DivinationRequest,
     DivinationResponse,
     RandomDivinationRequest,
     GuaInfo,
     ChangingLine
 )
-from ...services import gua_service
+from services import gua_service
 
 router = APIRouter()
 
@@ -37,6 +37,7 @@ async def calculate_gua(request: DivinationRequest):
                 binary=result['ben_gua']['binary'],
                 description=result['ben_gua']['description'],
                 image=result['ben_gua']['image'],
+                symbol=result['ben_gua'].get('symbol'),
                 yaoci=result['ben_gua'].get('yaoci')
             ),
             bian_gua=GuaInfo(
@@ -44,6 +45,7 @@ async def calculate_gua(request: DivinationRequest):
                 binary=result['bian_gua']['binary'],
                 description=result['bian_gua']['description'],
                 image=result['bian_gua']['image'],
+                symbol=result['bian_gua'].get('symbol'),
                 yaoci=result['bian_gua'].get('yaoci')
             ),
             changing_lines=[
@@ -72,6 +74,7 @@ async def random_divination(request: RandomDivinationRequest):
                 binary=result['ben_gua']['binary'],
                 description=result['ben_gua']['description'],
                 image=result['ben_gua']['image'],
+                symbol=result['ben_gua'].get('symbol'),
                 yaoci=result['ben_gua'].get('yaoci')
             ),
             bian_gua=GuaInfo(
@@ -79,6 +82,7 @@ async def random_divination(request: RandomDivinationRequest):
                 binary=result['bian_gua']['binary'],
                 description=result['bian_gua']['description'],
                 image=result['bian_gua']['image'],
+                symbol=result['bian_gua'].get('symbol'),
                 yaoci=result['bian_gua'].get('yaoci')
             ),
             changing_lines=[

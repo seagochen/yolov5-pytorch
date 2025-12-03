@@ -14,6 +14,7 @@ class GuaInfo(BaseModel):
     binary: str
     description: str
     image: str
+    symbol: Optional[str] = None
     yaoci: Optional[List[str]] = None
 
 

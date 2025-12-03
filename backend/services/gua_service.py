@@ -7,7 +7,7 @@ import random
 from typing import Dict, List, Optional
 from functools import lru_cache
 
-from ..config import settings
+from config import settings
 
 
 class GuaService:
@@ -70,24 +70,95 @@ class GuaService:
         if binary in self.gua_dict:
             info = self.gua_dict[binary].copy()
             info['binary'] = binary
+            # 如果数据中没有symbol字段，生成Unicode符号
+            if 'symbol' not in info:
+                info['symbol'] = self.generate_gua_image(binary)
             return info
         else:
             return {
                 'name': '未知卦象',
                 'binary': binary,
                 'description': f'二进制表示 {binary} 未找到对应卦象信息。',
-                'yaoci': []
+                'yaoci': [],
+                'symbol': '?'
             }
 
     def generate_gua_image(self, binary: str) -> str:
-        """生成卦象图案"""
-        lines = []
-        for bit in binary:
-            if bit == '1':
-                lines.append('———————')
-            else:
-                lines.append('——   ——')
-        return '\n'.join(lines)
+        """生成卦象 Unicode 符号
+
+        使用64卦的Unicode符号（U+4DC0 到 U+4DFF）
+        二进制从下到上对应爻的顺序，0=阴爻，1=阳爻
+        """
+        # 64卦映射表：binary -> Unicode字符
+        # 卦序按照二进制值从000000到111111
+        gua_unicode_map = {
+            '000000': '䷁',  # 坤
+            '000001': '䷗',  # 剥
+            '000010': '䷆',  # 比
+            '000011': '䷓',  # 观
+            '000100': '䷏',  # 豫
+            '000101': '䷂',  # 晋
+            '000110': '䷇',  # 萃
+            '000111': '䷒',  # 否
+            '001000': '䷖',  # 谦
+            '001001': '䷎',  # 艮
+            '001010': '䷳',  # 蹇
+            '001011': '䷴',  # 渐
+            '001100': '䷢',  # 小过
+            '001101': '䷸',  # 旅
+            '001110': '䷻',  # 咸
+            '001111': '䷋',  # 遁
+            '010000': '䷭',  # 师
+            '010001': '䷦',  # 蒙
+            '010010': '䷜',  # 坎
+            '010011': '䷮',  # 涣
+            '010100': '䷟',  # 解
+            '010101': '䷿',  # 未济
+            '010110': '䷬',  # 困
+            '010111': '䷤',  # 讼
+            '011000': '䷨',  # 升
+            '011001': '䷳',  # 蹇
+            '011010': '䷵',  # 坎
+            '011011': '䷯',  # 井
+            '011100': '䷹',  # 巽
+            '011101': '䷰',  # 鼎
+            '011110': '䷱',  # 恒
+            '011111': '䷡',  # 大过
+            '100000': '䷗',  # 复
+            '100001': '䷐',  # 颐
+            '100010': '䷫',  # 屯
+            '100011': '䷾',  # 益
+            '100100': '䷲',  # 震
+            '100101': '䷴',  # 噬嗑
+            '100110': '䷧',  # 随
+            '100111': '䷙',  # 无妄
+            '101000': '䷤',  # 明夷
+            '101001': '䷷',  # 贲
+            '101010': '䷕',  # 既济
+            '101011': '䷣',  # 家人
+            '101100': '䷶',  # 丰
+            '101101': '䷰',  # 离
+            '101110': '䷩',  # 革
+            '101111': '䷚',  # 同人
+            '110000': '䷗',  # 临
+            '110001': '䷙',  # 损
+            '110010': '䷺',  # 节
+            '110011': '䷼',  # 中孚
+            '110100': '䷳',  # 归妹
+            '110101': '䷥',  # 睽
+            '110110': '䷾',  # 兑
+            '110111': '䷪',  # 履
+            '111000': '䷋',  # 泰
+            '111001': '䷓',  # 大畜
+            '111010': '䷿',  # 需
+            '111011': '䷄',  # 小畜
+            '111100': '䷐',  # 大壮
+            '111101': '䷡',  # 大有
+            '111110': '䷬',  # 夬
+            '111111': '䷀',  # 乾
+        }
+
+        return gua_unicode_map.get(binary, '?')
 
     def calculate_divination(self, numbers: List[int]) -> Dict:
         """
@@ -103,9 +174,9 @@ class GuaService:
         ben_gua_info = self.get_gua_info(ben_gua_binary)
         bian_gua_info = self.get_gua_info(bian_gua_binary)
 
-        # 生成卦象图
-        ben_gua_image = self.generate_gua_image(ben_gua_binary)
-        bian_gua_image = self.generate_gua_image(bian_gua_binary)
+        # 获取卦象 Unicode 符号（优先使用数据中的symbol字段）
+        ben_gua_image = ben_gua_info.get('symbol', self.generate_gua_image(ben_gua_binary))
+        bian_gua_image = bian_gua_info.get('symbol', self.generate_gua_image(bian_gua_binary))
 
         # 获取变爻
         ben_yaoci = ben_gua_info.get('yaoci', ['无爻辞'] * 6)
@@ -176,7 +247,7 @@ class GuaService:
                 'alternate_name': info.get('alternate_name', ''),
                 'description': info.get('description', ''),
                 'yaoci': info.get('yaoci', []),
-                'image': self.generate_gua_image(binary)
+                'image': info.get('symbol', self.generate_gua_image(binary))
             }
         return None
 

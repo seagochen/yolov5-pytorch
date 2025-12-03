@@ -4,8 +4,8 @@
 """
 from fastapi import APIRouter, HTTPException
 
-from ...core.models import InterpretationRequest, InterpretationResponse
-from ...services import gemini_service
+from core.models import InterpretationRequest, InterpretationResponse
+from services import gemini_service
 
 router = APIRouter()
 

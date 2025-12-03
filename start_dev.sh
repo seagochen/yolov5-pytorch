@@ -78,7 +78,7 @@ echo
 echo -e "${YELLOW}启动后端服务 (http://localhost:8000)...${NC}"
 cd backend
 source venv/bin/activate
-python main.py &
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload &
 BACKEND_PID=$!
 cd ..
 

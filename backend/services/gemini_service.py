@@ -5,8 +5,8 @@ Gemini AI 服务 - 处理 AI 解卦
 import google.generativeai as genai
 from typing import Dict, List, Optional
 
-from ..config import settings, get_gemini_model
-from ..prompts import SYSTEM_PROMPT, get_interpretation_prompt, get_summary_prompt
+from config import settings, get_gemini_model
+from prompts import SYSTEM_PROMPT, get_interpretation_prompt, get_summary_prompt
 
 
 class GeminiService:

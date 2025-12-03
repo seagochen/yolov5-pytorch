@@ -5,6 +5,7 @@ export interface GuaInfo {
   binary: string;
   description: string;
   image: string;
+  symbol?: string;
   yaoci?: string[];
 }
 

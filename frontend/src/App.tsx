@@ -1,11 +1,11 @@
-import { Layout } from './components/Layout';
+import { LanguageProvider } from './contexts/LanguageContext';
 import { Divination } from './pages/Divination';
 
 function App() {
   return (
-    <Layout>
+    <LanguageProvider>
       <Divination />
-    </Layout>
+    </LanguageProvider>
   );
 }
 
