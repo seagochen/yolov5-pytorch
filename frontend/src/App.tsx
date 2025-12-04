@@ -1,7 +1,33 @@
 import { useState } from 'react';
+import Markdown from 'react-markdown';
 import './App.css';
 import { randomDivination, interpretGua } from './api/client';
 import type { DivinationResponse, InterpretationResponse } from './types';
+
+// 根据二进制字符串绘制卦图组件
+function GuaImage({ binary }: { binary: string }) {
+  // 数据文件中: binary[0]=上爻, binary[5]=初爻
+  // 绘制时从上到下: 先画上爻(binary[0]), 最后画初爻(binary[5])
+  const lines = binary.split('');
+
+  return (
+    <div className="gua-image">
+      {lines.map((bit, index) => (
+        <div key={index} className={`yao-line ${bit === '1' ? 'yang' : 'yin'}`}>
+          {bit === '1' ? (
+            <div className="yang-line" />
+          ) : (
+            <>
+              <div className="yin-half" />
+              <div className="yin-gap" />
+              <div className="yin-half" />
+            </>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function App() {
   const [question, setQuestion] = useState('');
@@ -99,18 +125,14 @@ function App() {
           <div className="gua-display">
             <div className="gua-card">
               <h3>本卦</h3>
-              {divinationResult.ben_gua.symbol && (
-                <div className="gua-symbol">{divinationResult.ben_gua.symbol}</div>
-              )}
+              <GuaImage binary={divinationResult.ben_gua.binary} />
               <div className="gua-name">{divinationResult.ben_gua.name}</div>
               <div className="gua-description">{divinationResult.ben_gua.description}</div>
             </div>
 
             <div className="gua-card">
               <h3>变卦</h3>
-              {divinationResult.bian_gua.symbol && (
-                <div className="gua-symbol">{divinationResult.bian_gua.symbol}</div>
-              )}
+              <GuaImage binary={divinationResult.bian_gua.binary} />
               <div className="gua-name">{divinationResult.bian_gua.name}</div>
               <div className="gua-description">{divinationResult.bian_gua.description}</div>
             </div>
@@ -141,12 +163,12 @@ function App() {
 
               <div className="interpretation-summary">
                 <h4>卦象总结</h4>
-                <p>{interpretation.summary}</p>
+                <Markdown>{interpretation.summary}</Markdown>
               </div>
 
               <div className="interpretation-detail">
                 <h4>详细解读</h4>
-                <p>{interpretation.interpretation}</p>
+                <Markdown>{interpretation.interpretation}</Markdown>
               </div>
             </div>
           )}
