@@ -1,0 +1,287 @@
+{
+  "introduction": {
+    "title": "奇门遁甲",
+    "description": "奇门遁甲是中国古代最高层次的预测学，被誉为"帝王之学"。它综合了天文、历法、阴阳五行等理论，通过时间和空间的变化来预测吉凶。"
+  },
+  "elements": {
+    "title": "九宫格元素说明",
+    "items": [
+      {
+        "name": "地盘（三奇六仪）",
+        "description": "固定不变，代表基础因素"
+      },
+      {
+        "name": "天盘",
+        "description": "运转变化，代表动态因素"
+      },
+      {
+        "name": "八门",
+        "description": "代表人事活动（生门、死门、伤门等）"
+      },
+      {
+        "name": "九星",
+        "description": "代表天时星象（天蓬、天芮、天冲等）"
+      },
+      {
+        "name": "八神",
+        "description": "代表神煞吉凶（值符、腾蛇、太阴等）"
+      }
+    ]
+  },
+  "four_pillars": {
+    "title": "四柱用神（重点）",
+    "description": "四柱用神是奇门遁甲中非常重要的概念，用于判断不同人事物的状态。",
+    "pillars": [
+      {
+        "name": "年干",
+        "gong": "坎宫1",
+        "meaning": "代表求测者本人、自己的想法和状态"
+      },
+      {
+        "name": "月干",
+        "gong": "震宫3",
+        "meaning": "代表兄弟姐妹、同事、朋友、合作伙伴"
+      },
+      {
+        "name": "日干",
+        "gong": "乾宫6",
+        "meaning": "代表父母、领导、上级、贵人、权威"
+      },
+      {
+        "name": "时干",
+        "gong": "兑宫7",
+        "meaning": "代表子女、下属、晚辈、执行者"
+      }
+    ],
+    "examples": [
+      {
+        "scenario": "求职",
+        "pillar": "日干（乾宫6）",
+        "explanation": "看领导、上级的态度"
+      },
+      {
+        "scenario": "求财",
+        "pillar": "月干（震宫3）",
+        "explanation": "看合作伙伴、客户关系"
+      },
+      {
+        "scenario": "问子女",
+        "pillar": "时干（兑宫7）",
+        "explanation": "看孩子的状态"
+      },
+      {
+        "scenario": "问自己",
+        "pillar": "年干（坎宫1）",
+        "explanation": "看自身条件"
+      }
+    ]
+  },
+  "bagua_palaces": {
+    "title": "八卦宫位含义",
+    "palaces": [
+      {
+        "number": 1,
+        "name": "坎宫",
+        "direction": "北方",
+        "element": "水",
+        "meanings": ["智慧", "困难", "流动"]
+      },
+      {
+        "number": 2,
+        "name": "坤宫",
+        "direction": "西南",
+        "element": "土",
+        "meanings": ["母亲", "土地", "包容"]
+      },
+      {
+        "number": 3,
+        "name": "震宫",
+        "direction": "东方",
+        "element": "木",
+        "meanings": ["动", "发展", "兄弟"]
+      },
+      {
+        "number": 4,
+        "name": "巽宫",
+        "direction": "东南",
+        "element": "木",
+        "meanings": ["文书", "消息", "长女"]
+      },
+      {
+        "number": 5,
+        "name": "中宫",
+        "direction": "中央",
+        "element": "土",
+        "meanings": ["核心", "枢纽"]
+      },
+      {
+        "number": 6,
+        "name": "乾宫",
+        "direction": "西北",
+        "element": "金",
+        "meanings": ["父亲", "领导", "权威"]
+      },
+      {
+        "number": 7,
+        "name": "兑宫",
+        "direction": "西方",
+        "element": "金",
+        "meanings": ["喜悦", "口才", "少女"]
+      },
+      {
+        "number": 8,
+        "name": "艮宫",
+        "direction": "东北",
+        "element": "土",
+        "meanings": ["停止", "阻碍", "少男"]
+      },
+      {
+        "number": 9,
+        "name": "离宫",
+        "direction": "南方",
+        "element": "火",
+        "meanings": ["文采", "名声", "中女"]
+      }
+    ]
+  },
+  "yongshen_meanings": {
+    "title": "宫位用神含义",
+    "meanings": {
+      "1": [
+        {
+          "name": "年干",
+          "meaning": "求测者本人、自己的想法"
+        },
+        {
+          "name": "值符",
+          "meaning": "最重要的人或事，核心问题"
+        }
+      ],
+      "2": [
+        {
+          "name": "坤宫",
+          "meaning": "母亲、妻子、老妇人、土地、房产"
+        }
+      ],
+      "3": [
+        {
+          "name": "月干",
+          "meaning": "兄弟姐妹、同事、朋友"
+        },
+        {
+          "name": "求财",
+          "meaning": "求财看震宫"
+        }
+      ],
+      "4": [
+        {
+          "name": "巽宫",
+          "meaning": "长女、文书、消息、远方"
+        }
+      ],
+      "6": [
+        {
+          "name": "日干",
+          "meaning": "父母、领导、上级、贵人"
+        },
+        {
+          "name": "求官",
+          "meaning": "求官看乾宫"
+        }
+      ],
+      "7": [
+        {
+          "name": "时干",
+          "meaning": "子女、下属、晚辈"
+        },
+        {
+          "name": "求学",
+          "meaning": "求学看兑宫"
+        }
+      ],
+      "8": [
+        {
+          "name": "艮宫",
+          "meaning": "少男、停止、阻碍、山林"
+        }
+      ],
+      "9": [
+        {
+          "name": "离宫",
+          "meaning": "中女、文采、名声、光明"
+        }
+      ]
+    }
+  },
+  "fortune_judgment": {
+    "title": "吉凶判断",
+    "categories": [
+      {
+        "type": "吉门",
+        "items": ["生门", "开门", "休门"]
+      },
+      {
+        "type": "凶门",
+        "items": ["死门", "惊门", "伤门"]
+      },
+      {
+        "type": "平门",
+        "items": ["杜门", "景门"]
+      },
+      {
+        "type": "吉星",
+        "items": ["天辅星", "天心星", "天任星"]
+      },
+      {
+        "type": "凶星",
+        "items": ["天蓬星", "天芮星"]
+      },
+      {
+        "type": "中性星",
+        "items": ["天冲星", "天禽星", "天柱星", "天英星"]
+      },
+      {
+        "type": "吉神",
+        "items": ["值符", "六合", "太阴", "九天"]
+      },
+      {
+        "type": "凶神",
+        "items": ["白虎", "玄武", "腾蛇"]
+      },
+      {
+        "type": "中性神",
+        "items": ["九地"]
+      },
+      {
+        "type": "三奇",
+        "items": [
+          {
+            "name": "乙",
+            "alias": "日奇",
+            "meaning": "见到三奇主吉"
+          },
+          {
+            "name": "丙",
+            "alias": "月奇",
+            "meaning": "见到三奇主吉"
+          },
+          {
+            "name": "丁",
+            "alias": "星奇",
+            "meaning": "见到三奇主吉"
+          }
+        ]
+      }
+    ]
+  },
+  "interpretation_steps": {
+    "title": "如何解读",
+    "steps": [
+      "先看值符宫（最重要），代表核心问题",
+      "根据所求事项看对应宫位（如求财看震宫3）",
+      "观察该宫的吉凶状态（门、星、神的组合）",
+      "参考用神含义，结合实际情况分析",
+      "查看最佳方位和不利方位的建议"
+    ]
+  }
+}
