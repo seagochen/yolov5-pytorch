@@ -167,6 +167,217 @@ POST /api/interpretation/analyze
 }
 ```
 
+## 八字排盘接口
+
+### 计算八字
+
+根据出生时间计算四柱八字。
+
+**请求**
+
+```
+POST /api/bazi/calculate
+```
+
+```json
+{
+  "name": "张三",
+  "calendar": "solar",
+  "year": 1990,
+  "month": 5,
+  "day": 15,
+  "hour": 10,
+  "minute": 30
+}
+```
+
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| name | string | 是 | 姓名 |
+| calendar | string | 是 | 历法类型："solar"（公历）或 "lunar"（农历） |
+| year | number | 是 | 年份 |
+| month | number | 是 | 月份 (1-12) |
+| day | number | 是 | 日期 (1-31) |
+| hour | number | 是 | 小时 (0-23) |
+| minute | number | 是 | 分钟 (0-59) |
+
+**响应**
+
+```json
+{
+  "name": "张三",
+  "solar_date": "1990-05-15",
+  "lunar_date": "农历四月廿一",
+  "pillars": {
+    "year": {"gan": "庚", "zhi": "午"},
+    "month": {"gan": "辛", "zhi": "巳"},
+    "day": {"gan": "甲", "zhi": "子"},
+    "hour": {"gan": "己", "zhi": "巳"}
+  },
+  "wuxing": {
+    "wood": 1,
+    "fire": 3,
+    "earth": 2,
+    "metal": 2,
+    "water": 1
+  },
+  "shensha": {
+    "auspicious": ["天乙贵人", "文昌星"],
+    "inauspicious": ["羊刃"]
+  }
+}
+```
+
+## 奇门遁甲接口
+
+### 排盘计算
+
+根据时间进行奇门遁甲排盘。
+
+**请求**
+
+```
+POST /api/qimen/calculate
+```
+
+```json
+{
+  "year": 2025,
+  "month": 1,
+  "day": 8,
+  "hour": 14,
+  "minute": 30
+}
+```
+
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| year | number | 是 | 年份 |
+| month | number | 是 | 月份 (1-12) |
+| day | number | 是 | 日期 (1-31) |
+| hour | number | 是 | 小时 (0-23) |
+| minute | number | 是 | 分钟 (0-59) |
+
+**响应**
+
+```json
+{
+  "time": "2025-01-08 14:30",
+  "solar_term": "小寒",
+  "ju": "阳遁一局",
+  "zhifu_palace": 6,
+  "palaces": {
+    "1": {
+      "bagua": "坎",
+      "dipan": "戊",
+      "tianpan": "己",
+      "door": "休门",
+      "star": "天蓬",
+      "god": "值符",
+      "fortune": 3
+    },
+    "2": {...},
+    ...
+  },
+  "analysis": {
+    "best_direction": "乾宫（西北）",
+    "worst_direction": "坤宫（西南）",
+    "suggestion": "整体吉利，宜主动出击"
+  }
+}
+```
+
+## 指南数据接口
+
+### 获取奇门遁甲指南
+
+获取奇门遁甲的完整使用指南和定义数据。
+
+**请求**
+
+```
+GET /api/guide/qimen
+```
+
+**响应**
+
+```json
+{
+  "introduction": {
+    "title": "奇门遁甲简介",
+    "content": "奇门遁甲是中国古代三式之一..."
+  },
+  "elements": {
+    "dipan": {...},
+    "tianpan": {...},
+    "doors": {...},
+    "stars": {...},
+    "gods": {...}
+  },
+  "four_pillars": {
+    "pillars": [...],
+    "examples": [...]
+  },
+  "bagua_palaces": [...],
+  "yongshen_meanings": {...},
+  "fortune_judgment": {...},
+  "interpretation_steps": [...]
+}
+```
+
+### 获取八字指南
+
+获取八字排盘的完整使用指南和定义数据。
+
+**请求**
+
+```
+GET /api/guide/bazi
+```
+
+**响应**
+
+```json
+{
+  "introduction": {...},
+  "pillars": [...],
+  "tiangan": {
+    "items": [
+      {
+        "name": "甲",
+        "element": "阳木",
+        "characteristics": ["生发", "向上", "刚健"]
+      },
+      ...
+    ]
+  },
+  "dizhi": {...},
+  "wuxing": {...},
+  "shensha": {...},
+  "calendar_systems": {...},
+  "usage_tips": [...]
+}
+```
+
+### 获取所有指南
+
+获取所有模块的指南数据。
+
+**请求**
+
+```
+GET /api/guide/
+```
+
+**响应**
+
+```json
+{
+  "qimen": {...},
+  "bazi": {...}
+}
+```
+
 ## 错误响应
 
 所有接口在出错时返回统一格式：

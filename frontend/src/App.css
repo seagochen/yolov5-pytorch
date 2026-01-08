@@ -1,35 +1,83 @@
+/* 应用包装器 */
+.app-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 导航栏样式 */
+.nav-bar {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-dark) 100%);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.nav-title {
+  font-size: 1.8rem;
+  color: white;
+  letter-spacing: 0.3rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-tab {
+  padding: 0.8rem 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.1rem;
+}
+
+.nav-tab:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.nav-tab.active {
+  background: white;
+  color: var(--color-text);
+  border-color: var(--color-accent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 主容器 */
 .app-container {
   width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: 1200px;
+  margin: 2rem auto;
   padding: 2rem;
+}
+
+.tab-content {
   background: var(--color-secondary);
   border-radius: 20px;
+  padding: 2rem;
   box-shadow:
     0 10px 40px rgba(212, 163, 115, 0.2),
     0 0 0 1px rgba(212, 163, 115, 0.1);
-}
-
-.header {
-  text-align: center;
-  margin-bottom: 2.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 2px solid var(--color-accent);
-}
-
-.header h1 {
-  font-size: 2.8rem;
-  margin-bottom: 0.5rem;
-  color: var(--color-text);
-  letter-spacing: 0.5rem;
-  font-weight: 600;
-}
-
-.header p {
-  font-size: 1.1rem;
-  color: var(--color-dark);
-  font-style: italic;
-  letter-spacing: 0.1rem;
 }
 
 .divination-form {
@@ -400,16 +448,593 @@
   text-align: center;
 }
 
+/* 八字排盘特有样式 */
+.bazi-form,
+.qimen-form {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--color-primary);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid var(--color-primary);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  background: var(--color-secondary);
+  color: var(--color-dark);
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--color-dark);
+  box-shadow: 0 0 0 3px rgba(212, 163, 115, 0.2);
+}
+
+.calendar-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.toggle-btn {
+  flex: 1;
+  padding: 0.8rem;
+  background: var(--color-secondary);
+  border: 2px solid var(--color-primary);
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.toggle-btn.active {
+  background: var(--color-primary);
+  color: white;
+  font-weight: 600;
+}
+
+.date-inputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.bazi-header,
+.qimen-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--color-accent);
+}
+
+.bazi-header h3,
+.qimen-header h3 {
+  font-size: 1.8rem;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+  letter-spacing: 0.2rem;
+}
+
+.bazi-datetime {
+  color: var(--color-dark);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.bazi-pillars {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.pillar-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  border: 2px solid var(--color-primary);
+  box-shadow: 0 2px 8px rgba(212, 163, 115, 0.15);
+}
+
+.pillar-label {
+  font-size: 0.9rem;
+  color: var(--color-dark);
+  margin-bottom: 0.5rem;
+}
+
+.pillar-value {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.2rem;
+}
+
+.pillar-detail {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 0.8rem;
+  font-size: 0.9rem;
+  color: var(--color-dark);
+}
+
+.bazi-wuxing {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--color-primary);
+}
+
+.bazi-wuxing h4 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: var(--color-text);
+}
+
+.wuxing-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.wuxing-item {
+  display: grid;
+  grid-template-columns: 60px 40px 1fr;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.wuxing-label {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.wuxing-count {
+  text-align: center;
+  font-weight: 600;
+  color: var(--color-dark);
+}
+
+.wuxing-bar {
+  height: 24px;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.bazi-shensha {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--color-primary);
+}
+
+.bazi-shensha h4 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: var(--color-text);
+}
+
+.shensha-summary {
+  margin-bottom: 1rem;
+}
+
+.shensha-count {
+  display: flex;
+  gap: 2rem;
+  font-size: 1rem;
+}
+
+.ji-count {
+  color: #2d8659;
+  font-weight: 600;
+}
+
+.xiong-count {
+  color: #d4421a;
+  font-weight: 600;
+}
+
+.shensha-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.shensha-card {
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid;
+}
+
+.shensha-card.ji {
+  background: #e8f5e9;
+  border-color: #2d8659;
+}
+
+.shensha-card.xiong {
+  background: #ffebee;
+  border-color: #d4421a;
+}
+
+.shensha-name {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.shensha-desc {
+  font-size: 0.9rem;
+  color: var(--color-dark);
+  line-height: 1.6;
+}
+
+/* 奇门遁甲特有样式 */
+.qimen-info {
+  color: var(--color-dark);
+  line-height: 1.8;
+}
+
+.qimen-info p {
+  margin: 0.3rem 0;
+}
+
+.form-description {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: var(--color-secondary);
+  border-radius: 8px;
+  border-left: 4px solid var(--color-primary);
+}
+
+.form-description p {
+  margin: 0;
+  color: var(--color-dark);
+  line-height: 1.6;
+}
+
+.jiugong-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.jiugong-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.gong-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  border: 3px solid;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.gong-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.gong-card.zhifu {
+  background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
+}
+
+.gong-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-accent);
+}
+
+.gong-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--color-text);
+}
+
+.zhifu-badge {
+  background: var(--color-primary);
+  color: white;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.gong-content {
+  font-size: 0.9rem;
+}
+
+.gong-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+  line-height: 1.6;
+}
+
+.gong-item .label {
+  color: var(--color-dark);
+  font-weight: 500;
+}
+
+.gong-jixiong {
+  margin-top: 0.8rem;
+  padding: 0.5rem;
+  background: var(--color-secondary);
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.gong-notes {
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--color-accent);
+}
+
+.note-item {
+  font-size: 0.85rem;
+  color: var(--color-dark);
+  margin-bottom: 0.3rem;
+  line-height: 1.5;
+}
+
+.qimen-analysis {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--color-primary);
+}
+
+.qimen-analysis h4 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: var(--color-text);
+}
+
+.analysis-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.analysis-item {
+  display: flex;
+  gap: 0.5rem;
+  line-height: 1.6;
+}
+
+.analysis-item strong {
+  color: var(--color-text);
+  min-width: 100px;
+}
+
+.analysis-summary,
+.analysis-advice {
+  margin-top: 0.5rem;
+  padding: 1rem;
+  background: var(--color-secondary);
+  border-radius: 8px;
+  border-left: 4px solid var(--color-primary);
+  line-height: 1.8;
+}
+
+.analysis-summary p,
+.analysis-advice p {
+  margin: 0.5rem 0;
+  color: var(--color-dark);
+}
+
+/* 用神说明样式 */
+.gong-yongshen {
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--color-accent);
+  background: #f0f7ff;
+  padding: 0.8rem;
+  border-radius: 6px;
+  margin-top: 0.5rem;
+}
+
+.yongshen-title {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--color-text);
+  margin-bottom: 0.4rem;
+}
+
+.yongshen-item {
+  font-size: 0.8rem;
+  margin-bottom: 0.3rem;
+  line-height: 1.5;
+  color: var(--color-dark);
+}
+
+.yongshen-item strong {
+  color: #1e5a8e;
+}
+
+/* 使用指南样式 */
+.guide-button {
+  margin-left: 1rem;
+  padding: 0.4rem 0.8rem;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.guide-button:hover {
+  background: var(--color-dark);
+  transform: translateY(-1px);
+}
+
+.guide-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.guide-modal {
+  background: white;
+  border-radius: 16px;
+  max-width: 800px;
+  max-height: 90vh;
+  width: 100%;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.guide-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 2px solid var(--color-accent);
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 1;
+}
+
+.guide-header h3 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 1.5rem;
+  letter-spacing: 0.1rem;
+}
+
+.guide-close {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--color-dark);
+  cursor: pointer;
+  padding: 0;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+}
+
+.guide-close:hover {
+  background: var(--color-secondary);
+  color: var(--color-text);
+}
+
+.guide-content {
+  padding: 1.5rem;
+}
+
+.guide-content section {
+  margin-bottom: 2rem;
+}
+
+.guide-content section:last-child {
+  margin-bottom: 0;
+}
+
+.guide-content h4 {
+  color: var(--color-text);
+  font-size: 1.2rem;
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-primary);
+}
+
+.guide-content p {
+  color: var(--color-dark);
+  line-height: 1.8;
+  margin-bottom: 0.8rem;
+}
+
+.guide-content ul,
+.guide-content ol {
+  margin: 0.8rem 0;
+  padding-left: 1.5rem;
+}
+
+.guide-content li {
+  color: var(--color-dark);
+  line-height: 1.8;
+  margin-bottom: 0.5rem;
+}
+
+.guide-content strong {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.guide-tip {
+  background: #fff9e6;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #f0ad4e;
+  margin-top: 0.8rem;
+  line-height: 1.8;
+}
+
+.guide-tip strong {
+  color: #d4421a;
+}
+
 @media (max-width: 768px) {
-  .app-container {
-    padding: 1.5rem;
-    border-radius: 16px;
-    margin: 0 0.5rem;
+  .nav-container {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem;
   }
 
-  .header h1 {
-    font-size: 2rem;
-    letter-spacing: 0.3rem;
+  .nav-title {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .nav-tabs {
+    flex-direction: column;
+  }
+
+  .nav-tab {
+    width: 100%;
+  }
+
+  .app-container {
+    padding: 1rem;
+    margin: 1rem 0.5rem;
+  }
+
+  .tab-content {
+    padding: 1.5rem;
   }
 
   .gua-display {
@@ -418,6 +1043,8 @@
   }
 
   .divination-form,
+  .bazi-form,
+  .qimen-form,
   .result-container {
     padding: 1.5rem;
   }
@@ -429,5 +1056,48 @@
   .yao-line {
     width: 60px;
     height: 8px;
+  }
+
+  .bazi-pillars {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .date-inputs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .jiugong-row {
+    grid-template-columns: 1fr;
+  }
+
+  .shensha-details {
+    grid-template-columns: 1fr;
+  }
+
+  .guide-modal {
+    max-height: 95vh;
+    margin: 0.5rem;
+  }
+
+  .guide-header {
+    padding: 1rem;
+  }
+
+  .guide-header h3 {
+    font-size: 1.2rem;
+  }
+
+  .guide-content {
+    padding: 1rem;
+  }
+
+  .guide-button {
+    display: block;
+    margin: 0.8rem 0 0 0;
+    width: 100%;
+  }
+
+  .gong-yongshen {
+    font-size: 0.85rem;
   }
 }
