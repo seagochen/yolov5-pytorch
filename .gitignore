@@ -185,3 +185,6 @@ node_modules/
 
 # Frontend build output
 frontend/dist/
+
+# Others
+package-lock.json
