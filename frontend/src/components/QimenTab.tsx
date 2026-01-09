@@ -1,13 +1,42 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { qimenPaipan, getQimenGuide } from '../api/client';
 import type { QimenResponse } from '../types';
+
+// 十二时辰定义
+const SHICHEN = [
+  { value: 23, label: '子时 (23:00-00:59)' },
+  { value: 1, label: '丑时 (01:00-02:59)' },
+  { value: 3, label: '寅时 (03:00-04:59)' },
+  { value: 5, label: '卯时 (05:00-06:59)' },
+  { value: 7, label: '辰时 (07:00-08:59)' },
+  { value: 9, label: '巳时 (09:00-10:59)' },
+  { value: 11, label: '午时 (11:00-12:59)' },
+  { value: 13, label: '未时 (13:00-14:59)' },
+  { value: 15, label: '申时 (15:00-16:59)' },
+  { value: 17, label: '酉时 (17:00-18:59)' },
+  { value: 19, label: '戌时 (19:00-20:59)' },
+  { value: 21, label: '亥时 (21:00-22:59)' },
+];
+
+// 判断是否为闰年
+const isLeapYear = (year: number): boolean => {
+  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+};
+
+// 获取某月的天数
+const getDaysInMonth = (year: number, month: number): number => {
+  const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  if (month === 2 && isLeapYear(year)) {
+    return 29;
+  }
+  return daysInMonth[month - 1];
+};
 
 export function QimenTab() {
   const [year, setYear] = useState('');
   const [month, setMonth] = useState('');
   const [day, setDay] = useState('');
   const [hour, setHour] = useState('');
-  const [minute, setMinute] = useState('0');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<QimenResponse | null>(null);
@@ -27,6 +56,37 @@ export function QimenTab() {
     loadGuide();
   }, []);
 
+  // 根据年月计算可选的日期
+  const availableDays = useMemo(() => {
+    if (!year || !month) return [];
+    const yearNum = parseInt(year);
+    const monthNum = parseInt(month);
+    if (isNaN(yearNum) || isNaN(monthNum)) return [];
+    const maxDays = getDaysInMonth(yearNum, monthNum);
+    return Array.from({ length: maxDays }, (_, i) => i + 1);
+  }, [year, month]);
+
+  // 当年或月改变时，重置日期（如果当前日期超出范围）
+  const handleYearChange = (newYear: string) => {
+    setYear(newYear);
+    if (day && month && newYear) {
+      const maxDays = getDaysInMonth(parseInt(newYear), parseInt(month));
+      if (parseInt(day) > maxDays) {
+        setDay('');
+      }
+    }
+  };
+
+  const handleMonthChange = (newMonth: string) => {
+    setMonth(newMonth);
+    if (day && year && newMonth) {
+      const maxDays = getDaysInMonth(parseInt(year), parseInt(newMonth));
+      if (parseInt(day) > maxDays) {
+        setDay('');
+      }
+    }
+  };
+
   const handleCalculate = async () => {
     if (!year || !month || !day || !hour) {
       setError('请填写完整的日期和时辰');
@@ -42,14 +102,13 @@ export function QimenTab() {
       const monthNum = parseInt(month);
       const dayNum = parseInt(day);
       const hourNum = parseInt(hour);
-      const minuteNum = parseInt(minute) || 0;
 
       const qimenResult = await qimenPaipan({
         year: yearNum,
         month: monthNum,
         day: dayNum,
         hour: hourNum,
-        minute: minuteNum,
+        minute: 0,
       });
 
       setResult(qimenResult);
@@ -350,7 +409,7 @@ export function QimenTab() {
               type="number"
               id="qm-year"
               value={year}
-              onChange={(e) => setYear(e.target.value)}
+              onChange={(e) => handleYearChange(e.target.value)}
               placeholder="例如：2024"
               disabled={loading}
               min="1900"
@@ -360,58 +419,53 @@ export function QimenTab() {
 
           <div className="form-group">
             <label htmlFor="qm-month">月</label>
-            <input
-              type="number"
+            <select
               id="qm-month"
               value={month}
-              onChange={(e) => setMonth(e.target.value)}
-              placeholder="1-12"
-              disabled={loading}
-              min="1"
-              max="12"
-            />
+              onChange={(e) => handleMonthChange(e.target.value)}
+              disabled={loading || !year}
+            >
+              <option value="">请选择</option>
+              {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+                <option key={m} value={m}>
+                  {m}月
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="form-group">
             <label htmlFor="qm-day">日</label>
-            <input
-              type="number"
+            <select
               id="qm-day"
               value={day}
               onChange={(e) => setDay(e.target.value)}
-              placeholder="1-31"
-              disabled={loading}
-              min="1"
-              max="31"
-            />
+              disabled={loading || !year || !month}
+            >
+              <option value="">请选择</option>
+              {availableDays.map((d) => (
+                <option key={d} value={d}>
+                  {d}日
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="form-group">
-            <label htmlFor="qm-hour">时</label>
-            <input
-              type="number"
+            <label htmlFor="qm-hour">时辰</label>
+            <select
               id="qm-hour"
               value={hour}
               onChange={(e) => setHour(e.target.value)}
-              placeholder="0-23"
               disabled={loading}
-              min="0"
-              max="23"
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="qm-minute">分</label>
-            <input
-              type="number"
-              id="qm-minute"
-              value={minute}
-              onChange={(e) => setMinute(e.target.value)}
-              placeholder="0-59"
-              disabled={loading}
-              min="0"
-              max="59"
-            />
+            >
+              <option value="">请选择</option>
+              {SHICHEN.map((s) => (
+                <option key={s.value} value={s.value}>
+                  {s.label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 

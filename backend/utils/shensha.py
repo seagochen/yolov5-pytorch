@@ -529,10 +529,196 @@ class ShenshaCalculator:
                 'type': 'ji' if shensha in ji_list else ('xiong' if shensha in xiong_list else 'zhong')
             })
 
+        # 按柱分类神煞
+        pillar_shensha = cls.calculate_shensha_by_pillar(bazi_info)
+
         return {
             'all': unique_shensha,
             'ji': ji_shensha,
             'xiong': xiong_shensha,
             'details': shensha_details,
-            'count': len(unique_shensha)
+            'count': len(unique_shensha),
+            'by_pillar': pillar_shensha
         }
+
+    @classmethod
+    def calculate_shensha_by_pillar(cls, bazi_info: Dict) -> Dict[str, List[Dict]]:
+        """
+        按柱计算神煞（每个柱上有哪些神煞）
+
+        Args:
+            bazi_info: 八字信息字典
+
+        Returns:
+            按柱分类的神煞字典
+        """
+        pillars = bazi_info['pillars']
+        year_gan = pillars['year']['gan']
+        year_zhi = pillars['year']['zhi']
+        month_gan = pillars['month']['gan']
+        month_zhi = pillars['month']['zhi']
+        day_gan = pillars['day']['gan']
+        day_zhi = pillars['day']['zhi']
+        hour_gan = pillars['hour']['gan']
+        hour_zhi = pillars['hour']['zhi']
+
+        month = bazi_info['lunar']['month']
+
+        # 吉凶分类
+        ji_list = ['天乙贵人', '太极贵人', '文昌贵人', '天德贵人', '月德贵人',
+                   '金舆', '国印', '学堂', '词馆', '禄神', '将星']
+        xiong_list = ['羊刃', '劫煞', '亡神', '天罗', '地网', '孤辰', '寡宿']
+
+        def get_type(name):
+            if name in ji_list:
+                return 'ji'
+            elif name in xiong_list:
+                return 'xiong'
+            return 'zhong'
+
+        def make_detail(name):
+            return {
+                'name': name,
+                'description': cls.SHENSHA_DESC.get(name, ''),
+                'type': get_type(name)
+            }
+
+        result = {
+            'year': [],
+            'month': [],
+            'day': [],
+            'hour': []
+        }
+
+        # === 年柱神煞 ===
+        # 天乙贵人（日干见年支）
+        if day_gan in cls.TIANYI_GUIREN and year_zhi in cls.TIANYI_GUIREN[day_gan]:
+            result['year'].append(make_detail('天乙贵人'))
+        # 太极贵人
+        if day_gan in cls.TAIJI_GUIREN and year_zhi in cls.TAIJI_GUIREN[day_gan]:
+            result['year'].append(make_detail('太极贵人'))
+        # 文昌贵人
+        if day_gan in cls.WENCHANG_GUIREN and cls.WENCHANG_GUIREN[day_gan] == year_zhi:
+            result['year'].append(make_detail('文昌贵人'))
+        # 驿马（年支为基准）
+        if year_zhi in cls.YIMA and cls.YIMA[year_zhi] == year_zhi:
+            result['year'].append(make_detail('驿马'))
+        # 华盖
+        if year_zhi in cls.HUAGAI and cls.HUAGAI[year_zhi] == year_zhi:
+            result['year'].append(make_detail('华盖'))
+        # 桃花
+        if year_zhi in cls.TAOHUA and cls.TAOHUA[year_zhi] == year_zhi:
+            result['year'].append(make_detail('桃花'))
+        # 羊刃
+        if day_gan in cls.YANGREN and cls.YANGREN[day_gan] == year_zhi:
+            result['year'].append(make_detail('羊刃'))
+        # 禄神
+        if day_gan in cls.LUSHEN and cls.LUSHEN[day_gan] == year_zhi:
+            result['year'].append(make_detail('禄神'))
+        # 劫煞
+        if year_zhi in cls.JIESHA and cls.JIESHA[year_zhi] == year_zhi:
+            result['year'].append(make_detail('劫煞'))
+        # 天罗地网
+        if year_zhi == '辰':
+            result['year'].append(make_detail('天罗'))
+        if year_zhi == '戌':
+            result['year'].append(make_detail('地网'))
+        # 孤辰寡宿
+        if year_zhi in cls.GUCHEN_GUASU:
+            guchen, guasu = cls.GUCHEN_GUASU[year_zhi]
+            if guchen == year_zhi:
+                result['year'].append(make_detail('孤辰'))
+            if guasu == year_zhi:
+                result['year'].append(make_detail('寡宿'))
+
+        # === 月柱神煞 ===
+        if day_gan in cls.TIANYI_GUIREN and month_zhi in cls.TIANYI_GUIREN[day_gan]:
+            result['month'].append(make_detail('天乙贵人'))
+        if day_gan in cls.TAIJI_GUIREN and month_zhi in cls.TAIJI_GUIREN[day_gan]:
+            result['month'].append(make_detail('太极贵人'))
+        if day_gan in cls.WENCHANG_GUIREN and cls.WENCHANG_GUIREN[day_gan] == month_zhi:
+            result['month'].append(make_detail('文昌贵人'))
+        if year_zhi in cls.YIMA and cls.YIMA[year_zhi] == month_zhi:
+            result['month'].append(make_detail('驿马'))
+        if year_zhi in cls.HUAGAI and cls.HUAGAI[year_zhi] == month_zhi:
+            result['month'].append(make_detail('华盖'))
+        if year_zhi in cls.TAOHUA and cls.TAOHUA[year_zhi] == month_zhi:
+            result['month'].append(make_detail('桃花'))
+        if day_gan in cls.YANGREN and cls.YANGREN[day_gan] == month_zhi:
+            result['month'].append(make_detail('羊刃'))
+        if day_gan in cls.LUSHEN and cls.LUSHEN[day_gan] == month_zhi:
+            result['month'].append(make_detail('禄神'))
+        if year_zhi in cls.JIESHA and cls.JIESHA[year_zhi] == month_zhi:
+            result['month'].append(make_detail('劫煞'))
+        if month_zhi == '辰':
+            result['month'].append(make_detail('天罗'))
+        if month_zhi == '戌':
+            result['month'].append(make_detail('地网'))
+        if year_zhi in cls.GUCHEN_GUASU:
+            guchen, guasu = cls.GUCHEN_GUASU[year_zhi]
+            if guchen == month_zhi:
+                result['month'].append(make_detail('孤辰'))
+            if guasu == month_zhi:
+                result['month'].append(make_detail('寡宿'))
+
+        # === 日柱神煞 ===
+        if day_gan in cls.TIANYI_GUIREN and day_zhi in cls.TIANYI_GUIREN[day_gan]:
+            result['day'].append(make_detail('天乙贵人'))
+        if day_gan in cls.TAIJI_GUIREN and day_zhi in cls.TAIJI_GUIREN[day_gan]:
+            result['day'].append(make_detail('太极贵人'))
+        if day_gan in cls.WENCHANG_GUIREN and cls.WENCHANG_GUIREN[day_gan] == day_zhi:
+            result['day'].append(make_detail('文昌贵人'))
+        if year_zhi in cls.YIMA and cls.YIMA[year_zhi] == day_zhi:
+            result['day'].append(make_detail('驿马'))
+        if year_zhi in cls.HUAGAI and cls.HUAGAI[year_zhi] == day_zhi:
+            result['day'].append(make_detail('华盖'))
+        if year_zhi in cls.TAOHUA and cls.TAOHUA[year_zhi] == day_zhi:
+            result['day'].append(make_detail('桃花'))
+        if day_gan in cls.YANGREN and cls.YANGREN[day_gan] == day_zhi:
+            result['day'].append(make_detail('羊刃'))
+        if day_gan in cls.LUSHEN and cls.LUSHEN[day_gan] == day_zhi:
+            result['day'].append(make_detail('禄神'))
+        if year_zhi in cls.JIESHA and cls.JIESHA[year_zhi] == day_zhi:
+            result['day'].append(make_detail('劫煞'))
+        if day_zhi == '辰':
+            result['day'].append(make_detail('天罗'))
+        if day_zhi == '戌':
+            result['day'].append(make_detail('地网'))
+        if year_zhi in cls.GUCHEN_GUASU:
+            guchen, guasu = cls.GUCHEN_GUASU[year_zhi]
+            if guchen == day_zhi:
+                result['day'].append(make_detail('孤辰'))
+            if guasu == day_zhi:
+                result['day'].append(make_detail('寡宿'))
+
+        # === 时柱神煞 ===
+        if day_gan in cls.TIANYI_GUIREN and hour_zhi in cls.TIANYI_GUIREN[day_gan]:
+            result['hour'].append(make_detail('天乙贵人'))
+        if day_gan in cls.TAIJI_GUIREN and hour_zhi in cls.TAIJI_GUIREN[day_gan]:
+            result['hour'].append(make_detail('太极贵人'))
+        if day_gan in cls.WENCHANG_GUIREN and cls.WENCHANG_GUIREN[day_gan] == hour_zhi:
+            result['hour'].append(make_detail('文昌贵人'))
+        if year_zhi in cls.YIMA and cls.YIMA[year_zhi] == hour_zhi:
+            result['hour'].append(make_detail('驿马'))
+        if year_zhi in cls.HUAGAI and cls.HUAGAI[year_zhi] == hour_zhi:
+            result['hour'].append(make_detail('华盖'))
+        if year_zhi in cls.TAOHUA and cls.TAOHUA[year_zhi] == hour_zhi:
+            result['hour'].append(make_detail('桃花'))
+        if day_gan in cls.YANGREN and cls.YANGREN[day_gan] == hour_zhi:
+            result['hour'].append(make_detail('羊刃'))
+        if day_gan in cls.LUSHEN and cls.LUSHEN[day_gan] == hour_zhi:
+            result['hour'].append(make_detail('禄神'))
+        if year_zhi in cls.JIESHA and cls.JIESHA[year_zhi] == hour_zhi:
+            result['hour'].append(make_detail('劫煞'))
+        if hour_zhi == '辰':
+            result['hour'].append(make_detail('天罗'))
+        if hour_zhi == '戌':
+            result['hour'].append(make_detail('地网'))
+        if year_zhi in cls.GUCHEN_GUASU:
+            guchen, guasu = cls.GUCHEN_GUASU[year_zhi]
+            if guchen == hour_zhi:
+                result['hour'].append(make_detail('孤辰'))
+            if guasu == hour_zhi:
+                result['hour'].append(make_detail('寡宿'))
+
+        return result

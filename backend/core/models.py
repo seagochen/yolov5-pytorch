@@ -107,6 +107,14 @@ class ShenshaDetail(BaseModel):
     type: str  # ji(吉), xiong(凶), zhong(中性)
 
 
+class ShenshaPillar(BaseModel):
+    """按柱分类的神煞"""
+    year: List[ShenshaDetail] = []
+    month: List[ShenshaDetail] = []
+    day: List[ShenshaDetail] = []
+    hour: List[ShenshaDetail] = []
+
+
 class ShenshaInfo(BaseModel):
     """神煞信息"""
     all: List[str]
@@ -114,6 +122,39 @@ class ShenshaInfo(BaseModel):
     xiong: List[str]
     details: List[ShenshaDetail]
     count: int
+    by_pillar: Optional[ShenshaPillar] = None
+
+
+class CangGan(BaseModel):
+    """藏干信息"""
+    year: List[str]
+    month: List[str]
+    day: List[str]
+    hour: List[str]
+
+
+class Nayin(BaseModel):
+    """纳音信息"""
+    year: str
+    month: str
+    day: str
+    hour: str
+
+
+class Shishen(BaseModel):
+    """十神信息"""
+    year_gan: str
+    month_gan: str
+    day_gan: str
+    hour_gan: str
+
+
+class CangganShishen(BaseModel):
+    """藏干十神信息"""
+    year: List[str]
+    month: List[str]
+    day: List[str]
+    hour: List[str]
 
 
 class BaziResponse(BaseModel):
@@ -123,6 +164,10 @@ class BaziResponse(BaseModel):
     day_pillar: str
     hour_pillar: str
     pillars: Dict[str, PillarInfo]
+    cang_gan: CangGan
+    nayin: Nayin
+    shishen: Shishen
+    canggan_shishen: CangganShishen
     wu_xing: Dict[str, str]
     wu_xing_count: Dict[str, int]
     yin_yang: Dict[str, str]

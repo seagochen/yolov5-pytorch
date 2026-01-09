@@ -8,8 +8,8 @@ import json
 
 router = APIRouter(prefix="/guide", tags=["指南"])
 
-# 数据文件路径
-DATA_DIR = Path(__file__).parent.parent.parent / "data"
+# 数据文件路径 (项目根目录/data/)
+DATA_DIR = Path(__file__).parent.parent.parent.parent / "data"
 QIMEN_GUIDE_FILE = DATA_DIR / "qimen_guide.json"
 BAZI_GUIDE_FILE = DATA_DIR / "bazi_guide.json"
 

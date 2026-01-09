@@ -42,6 +42,56 @@ class BaziCalculator:
         '申': '阳', '酉': '阴', '戌': '阳', '亥': '阴'
     }
 
+    # 藏干
+    CANG_GAN = {
+        '子': ['癸'],
+        '丑': ['己', '癸', '辛'],
+        '寅': ['甲', '丙', '戊'],
+        '卯': ['乙'],
+        '辰': ['戊', '乙', '癸'],
+        '巳': ['丙', '戊', '庚'],
+        '午': ['丁', '己'],
+        '未': ['己', '丁', '乙'],
+        '申': ['庚', '壬', '戊'],
+        '酉': ['辛'],
+        '戌': ['戊', '辛', '丁'],
+        '亥': ['壬', '甲']
+    }
+
+    # 六十甲子纳音
+    NAYIN = {
+        '甲子': '海中金', '乙丑': '海中金',
+        '丙寅': '炉中火', '丁卯': '炉中火',
+        '戊辰': '大林木', '己巳': '大林木',
+        '庚午': '路旁土', '辛未': '路旁土',
+        '壬申': '剑锋金', '癸酉': '剑锋金',
+        '甲戌': '山头火', '乙亥': '山头火',
+        '丙子': '涧下水', '丁丑': '涧下水',
+        '戊寅': '城头土', '己卯': '城头土',
+        '庚辰': '白蜡金', '辛巳': '白蜡金',
+        '壬午': '杨柳木', '癸未': '杨柳木',
+        '甲申': '泉中水', '乙酉': '泉中水',
+        '丙戌': '屋上土', '丁亥': '屋上土',
+        '戊子': '霹雳火', '己丑': '霹雳火',
+        '庚寅': '松柏木', '辛卯': '松柏木',
+        '壬辰': '长流水', '癸巳': '长流水',
+        '甲午': '砂石金', '乙未': '砂石金',
+        '丙申': '山下火', '丁酉': '山下火',
+        '戊戌': '平地木', '己亥': '平地木',
+        '庚子': '壁上土', '辛丑': '壁上土',
+        '壬寅': '金箔金', '癸卯': '金箔金',
+        '甲辰': '覆灯火', '乙巳': '覆灯火',
+        '丙午': '天河水', '丁未': '天河水',
+        '戊申': '大驿土', '己酉': '大驿土',
+        '庚戌': '钗钏金', '辛亥': '钗钏金',
+        '壬子': '桑柘木', '癸丑': '桑柘木',
+        '甲寅': '大溪水', '乙卯': '大溪水',
+        '丙辰': '砂中土', '丁巳': '砂中土',
+        '戊午': '天上火', '己未': '天上火',
+        '庚申': '石榴木', '辛酉': '石榴木',
+        '壬戌': '大海水', '癸亥': '大海水'
+    }
+
     # 节气信息（简化版本，用于月柱计算）
     # 每年的节气大致时间（实际应根据精确天文计算）
     SOLAR_TERMS_BASE = [
@@ -227,6 +277,60 @@ class BaziCalculator:
         return hour_gan, hour_zhi
 
     @classmethod
+    def get_nayin(cls, ganzhi: str) -> str:
+        """获取纳音五行"""
+        return cls.NAYIN.get(ganzhi, '')
+
+    @classmethod
+    def get_canggan(cls, zhi: str) -> list:
+        """获取地支藏干"""
+        return cls.CANG_GAN.get(zhi, [])
+
+    @classmethod
+    def get_shishen(cls, day_gan: str, target_gan: str) -> str:
+        """
+        计算十神关系
+        以日干为我，看目标干与日干的关系
+
+        Args:
+            day_gan: 日干（我）
+            target_gan: 目标天干
+
+        Returns:
+            十神名称
+        """
+        if day_gan == target_gan:
+            return '比肩'
+
+        day_wuxing = cls.WU_XING[day_gan]
+        target_wuxing = cls.WU_XING[target_gan]
+        day_yinyang = cls.YIN_YANG[day_gan]
+        target_yinyang = cls.YIN_YANG[target_gan]
+        same_yinyang = day_yinyang == target_yinyang
+
+        # 五行生克关系
+        sheng = {'木': '火', '火': '土', '土': '金', '金': '水', '水': '木'}
+        ke = {'木': '土', '火': '金', '土': '水', '金': '木', '水': '火'}
+
+        # 同我（比劫）
+        if day_wuxing == target_wuxing:
+            return '比肩' if same_yinyang else '劫财'
+        # 我生（食伤）
+        elif sheng[day_wuxing] == target_wuxing:
+            return '食神' if same_yinyang else '伤官'
+        # 我克（财）
+        elif ke[day_wuxing] == target_wuxing:
+            return '偏财' if same_yinyang else '正财'
+        # 克我（官杀）
+        elif ke[target_wuxing] == day_wuxing:
+            return '七杀' if same_yinyang else '正官'
+        # 生我（印）
+        elif sheng[target_wuxing] == day_wuxing:
+            return '偏印' if same_yinyang else '正印'
+
+        return ''
+
+    @classmethod
     def calculate_bazi(cls, birth_date: datetime) -> Dict:
         """
         计算完整的八字四柱
@@ -282,6 +386,38 @@ class BaziCalculator:
         for element in wu_xing.values():
             wu_xing_count[element] += 1
 
+        # 计算藏干
+        cang_gan = {
+            'year': cls.get_canggan(year_zhi),
+            'month': cls.get_canggan(month_zhi),
+            'day': cls.get_canggan(day_zhi),
+            'hour': cls.get_canggan(hour_zhi),
+        }
+
+        # 计算纳音
+        nayin = {
+            'year': cls.get_nayin(year_pillar),
+            'month': cls.get_nayin(month_pillar),
+            'day': cls.get_nayin(day_pillar),
+            'hour': cls.get_nayin(hour_pillar),
+        }
+
+        # 计算十神（以日干为主）
+        shishen = {
+            'year_gan': cls.get_shishen(day_gan, year_gan),
+            'month_gan': cls.get_shishen(day_gan, month_gan),
+            'day_gan': '日主',  # 日干是自己
+            'hour_gan': cls.get_shishen(day_gan, hour_gan),
+        }
+
+        # 计算藏干的十神
+        canggan_shishen = {
+            'year': [cls.get_shishen(day_gan, g) for g in cang_gan['year']],
+            'month': [cls.get_shishen(day_gan, g) for g in cang_gan['month']],
+            'day': [cls.get_shishen(day_gan, g) for g in cang_gan['day']],
+            'hour': [cls.get_shishen(day_gan, g) for g in cang_gan['hour']],
+        }
+
         return {
             'year_pillar': year_pillar,
             'month_pillar': month_pillar,
@@ -293,6 +429,10 @@ class BaziCalculator:
                 'day': {'gan': day_gan, 'zhi': day_zhi},
                 'hour': {'gan': hour_gan, 'zhi': hour_zhi},
             },
+            'cang_gan': cang_gan,
+            'nayin': nayin,
+            'shishen': shishen,
+            'canggan_shishen': canggan_shishen,
             'wu_xing': wu_xing,
             'wu_xing_count': wu_xing_count,
             'yin_yang': yin_yang,

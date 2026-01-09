@@ -76,12 +76,48 @@ export interface ShenshaDetail {
   type: string;
 }
 
+export interface ShenshaPillar {
+  year: ShenshaDetail[];
+  month: ShenshaDetail[];
+  day: ShenshaDetail[];
+  hour: ShenshaDetail[];
+}
+
 export interface ShenshaInfo {
   all: string[];
   ji: string[];
   xiong: string[];
   details: ShenshaDetail[];
   count: number;
+  by_pillar: ShenshaPillar;
+}
+
+export interface CangGan {
+  year: string[];
+  month: string[];
+  day: string[];
+  hour: string[];
+}
+
+export interface Nayin {
+  year: string;
+  month: string;
+  day: string;
+  hour: string;
+}
+
+export interface Shishen {
+  year_gan: string;
+  month_gan: string;
+  day_gan: string;
+  hour_gan: string;
+}
+
+export interface CangganShishen {
+  year: string[];
+  month: string[];
+  day: string[];
+  hour: string[];
 }
 
 export interface BaziResponse {
@@ -95,6 +131,10 @@ export interface BaziResponse {
     day: PillarInfo;
     hour: PillarInfo;
   };
+  cang_gan: CangGan;
+  nayin: Nayin;
+  shishen: Shishen;
+  canggan_shishen: CangganShishen;
   wu_xing: Record<string, string>;
   wu_xing_count: Record<string, number>;
   yin_yang: Record<string, string>;
