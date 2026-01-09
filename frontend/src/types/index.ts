@@ -150,6 +150,27 @@ export interface LunarConversionRequest {
   day: number;
 }
 
+// 城市和时区相关类型
+export interface CityInfo {
+  name: string;
+  name_en: string;
+  country: string;
+  longitude: number;
+  latitude: number;
+  timezone: number;
+  timezone_abbr: string;
+}
+
+export interface TimezoneInfo {
+  value: number;
+  label: string;
+}
+
+export interface CitiesData {
+  cities: CityInfo[];
+  timezones: TimezoneInfo[];
+}
+
 // 奇门遁甲相关类型
 export interface GongInfo {
   gong_name: string;

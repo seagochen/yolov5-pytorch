@@ -204,6 +204,9 @@ class QimenDunjia:
         """
         排八门（人盘）
 
+        八门按照九宫飞布顺序排列：1->8->3->4->9->2->7->6
+        八门只有8个，中五宫寄坤二宫（即中五宫显示与坤二宫相同的门）
+
         Args:
             zhi_shi_gong: 值使宫位
             shi_gan_index: 时干索引
@@ -214,24 +217,24 @@ class QimenDunjia:
         """
         ba_men = {}
 
-        # 值使门永远跟随值符
+        # 九宫飞布顺序（不含中五宫）
+        gong_order = [1, 8, 3, 4, 9, 2, 7, 6]
+
+        # 八门顺序（与九宫飞布顺序对应的地盘门）
+        # 地盘：1-休门, 8-生门, 3-伤门, 4-杜门, 9-景门, 2-死门, 7-惊门, 6-开门
+        men_order = ['休门', '生门', '伤门', '杜门', '景门', '死门', '惊门', '开门']
+
+        # 值使门随时辰移动
         offset = shi_gan_index if is_yang else -shi_gan_index
 
-        for gong in range(1, 10):
-            if gong == 5:
-                ba_men[5] = cls.BA_MEN_DI_PAN[2]  # 中五宫寄坤二宫
-                continue
+        # 八门按九宫顺序分配到各宫
+        for i, gong in enumerate(gong_order):
+            # 计算该宫应该放置的门的索引
+            men_index = (i - offset) % 8
+            ba_men[gong] = men_order[men_index]
 
-            new_gong = gong + offset
-            if new_gong > 9:
-                new_gong -= 8
-            elif new_gong < 1:
-                new_gong += 8
-
-            if new_gong == 5:
-                new_gong = 2
-
-            ba_men[gong] = cls.BA_MEN_DI_PAN.get(new_gong, '休门')
+        # 中五宫寄坤二宫
+        ba_men[5] = ba_men[2]
 
         return ba_men
 
@@ -239,6 +242,9 @@ class QimenDunjia:
     def arrange_jiu_xing(cls, zhi_fu_gong: int, shi_gan_index: int, is_yang: bool) -> Dict[int, str]:
         """
         排九星
+
+        九星按照九宫飞布顺序排列：1->8->3->4->9->2->7->6
+        天禽星寄坤二宫（中五宫显示与坤二宫相同）
 
         Args:
             zhi_fu_gong: 值符宫位
@@ -249,23 +255,22 @@ class QimenDunjia:
             九星配置
         """
         jiu_xing = {}
+
+        # 九宫飞布顺序（不含中五宫）
+        gong_order = [1, 8, 3, 4, 9, 2, 7, 6]
+
+        # 九星顺序（天禽星寄坤二宫，所以只有8个星分配到8宫）
+        # 地盘：1-天蓬, 8-天任, 3-天冲, 4-天辅, 9-天英, 2-天芮(禽), 7-天柱, 6-天心
+        xing_order = ['天蓬星', '天任星', '天冲星', '天辅星', '天英星', '天芮星', '天柱星', '天心星']
+
         offset = shi_gan_index if is_yang else -shi_gan_index
 
-        for gong in range(1, 10):
-            if gong == 5:
-                jiu_xing[5] = cls.JIU_XING_DI_PAN[2]
-                continue
+        for i, gong in enumerate(gong_order):
+            xing_index = (i - offset) % 8
+            jiu_xing[gong] = xing_order[xing_index]
 
-            new_gong = gong + offset
-            if new_gong > 9:
-                new_gong -= 8
-            elif new_gong < 1:
-                new_gong += 8
-
-            if new_gong == 5:
-                new_gong = 2
-
-            jiu_xing[gong] = cls.JIU_XING_DI_PAN.get(new_gong, '天蓬星')
+        # 中五宫（天禽星）寄坤二宫
+        jiu_xing[5] = jiu_xing[2]
 
         return jiu_xing
 
@@ -274,28 +279,53 @@ class QimenDunjia:
         """
         排八神
 
+        八神以值符宫为起点，按九宫飞布顺序排列：
+        - 阳遁顺排：值符→腾蛇→太阴→六合→白虎→玄武→九地→九天
+        - 阴遁逆排：值符→九天→九地→玄武→白虎→六合→太阴→腾蛇
+
         Args:
-            zhi_fu_gong: 值符宫位
-            shi_gan_index: 时干索引
+            zhi_fu_gong: 值符宫位（八神从此宫开始排布）
+            shi_gan_index: 时干索引（未使用，八神不随时干移动）
             is_yang: 是否阳遁
 
         Returns:
             八神配置
         """
         ba_shen = {}
-        ba_shen_order = cls.BA_SHEN
 
-        # 值符永远在值符宫
-        start_index = 0
-        offset = shi_gan_index if is_yang else -shi_gan_index
+        # 八神顺序
+        if is_yang:
+            # 阳遁顺排
+            shen_order = ['值符', '腾蛇', '太阴', '六合', '白虎', '玄武', '九地', '九天']
+        else:
+            # 阴遁逆排
+            shen_order = ['值符', '九天', '九地', '玄武', '白虎', '六合', '太阴', '腾蛇']
 
-        gong_order = [1, 8, 3, 4, 9, 2, 7, 6]  # 八宫顺序（不含中五宫）
+        # 九宫飞布顺序（不含中五宫）
+        gong_order = [1, 8, 3, 4, 9, 2, 7, 6]
 
-        for i, gong in enumerate(gong_order):
-            shen_index = (start_index + i + offset) % 8
-            ba_shen[gong] = ba_shen_order[shen_index]
+        # 找到值符宫在九宫顺序中的位置
+        if zhi_fu_gong == 5:
+            # 中五宫寄坤二宫
+            start_gong = 2
+        else:
+            start_gong = zhi_fu_gong
 
-        ba_shen[5] = '值符'  # 中五宫
+        # 找到起始宫位在顺序中的索引
+        try:
+            start_idx = gong_order.index(start_gong)
+        except ValueError:
+            start_idx = 0
+
+        # 从值符宫开始，按九宫顺序分配八神
+        for i, shen in enumerate(shen_order):
+            gong_idx = (start_idx + i) % 8
+            gong = gong_order[gong_idx]
+            ba_shen[gong] = shen
+
+        # 中五宫寄坤二宫
+        ba_shen[5] = ba_shen[2]
+
         return ba_shen
 
     @classmethod

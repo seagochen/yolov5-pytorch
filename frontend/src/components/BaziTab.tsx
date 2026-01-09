@@ -1,6 +1,44 @@
 import { useState, useMemo } from 'react';
 import { calculateBazi } from '../api/client';
-import type { BaziResponse } from '../types';
+import type { BaziResponse, CityInfo } from '../types';
+
+// 城市数据
+const CITIES: CityInfo[] = [
+  { name: '北京', name_en: 'Beijing', country: '中国', longitude: 116.4074, latitude: 39.9042, timezone: 8, timezone_abbr: 'CST' },
+  { name: '上海', name_en: 'Shanghai', country: '中国', longitude: 121.4737, latitude: 31.2304, timezone: 8, timezone_abbr: 'CST' },
+  { name: '广州', name_en: 'Guangzhou', country: '中国', longitude: 113.2644, latitude: 23.1291, timezone: 8, timezone_abbr: 'CST' },
+  { name: '成都', name_en: 'Chengdu', country: '中国', longitude: 104.0665, latitude: 30.5728, timezone: 8, timezone_abbr: 'CST' },
+  { name: '武汉', name_en: 'Wuhan', country: '中国', longitude: 114.3055, latitude: 30.5928, timezone: 8, timezone_abbr: 'CST' },
+  { name: '沈阳', name_en: 'Shenyang', country: '中国', longitude: 123.4315, latitude: 41.8057, timezone: 8, timezone_abbr: 'CST' },
+  { name: '哈尔滨', name_en: 'Harbin', country: '中国', longitude: 126.6424, latitude: 45.7567, timezone: 8, timezone_abbr: 'CST' },
+  { name: '重庆', name_en: 'Chongqing', country: '中国', longitude: 106.5516, latitude: 29.5630, timezone: 8, timezone_abbr: 'CST' },
+  { name: '东京', name_en: 'Tokyo', country: '日本', longitude: 139.6917, latitude: 35.6895, timezone: 9, timezone_abbr: 'JST' },
+  { name: '大阪', name_en: 'Osaka', country: '日本', longitude: 135.5023, latitude: 34.6937, timezone: 9, timezone_abbr: 'JST' },
+  { name: '札幌', name_en: 'Sapporo', country: '日本', longitude: 141.3545, latitude: 43.0618, timezone: 9, timezone_abbr: 'JST' },
+];
+
+// 计算真太阳时偏差（分钟）
+// 公式：真太阳时 = 标准时间 + (当地经度 - 时区中央经度) × 4分钟
+const calculateTrueSolarTimeOffset = (longitude: number, timezone: number): number => {
+  const centralLongitude = timezone * 15; // 时区中央经度
+  return (longitude - centralLongitude) * 4; // 每度4分钟
+};
+
+// 根据标准时间和偏差计算真太阳时
+const adjustTimeForTrueSolar = (
+  year: number, month: number, day: number, hour: number, minute: number,
+  offsetMinutes: number
+): { year: number; month: number; day: number; hour: number; minute: number } => {
+  const date = new Date(year, month - 1, day, hour, minute);
+  date.setMinutes(date.getMinutes() + Math.round(offsetMinutes));
+  return {
+    year: date.getFullYear(),
+    month: date.getMonth() + 1,
+    day: date.getDate(),
+    hour: date.getHours(),
+    minute: date.getMinutes(),
+  };
+};
 
 // 十二时辰定义
 const SHICHEN = [
@@ -58,6 +96,7 @@ const WUXING_MAP: Record<string, string> = {
 
 export function BaziTab() {
   const [name, setName] = useState('');
+  const [city, setCity] = useState<CityInfo>(CITIES[0]); // 默认北京
   const [year, setYear] = useState('');
   const [month, setMonth] = useState('');
   const [day, setDay] = useState('');
@@ -65,6 +104,7 @@ export function BaziTab() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<BaziResponse | null>(null);
+  const [trueSolarInfo, setTrueSolarInfo] = useState<string | null>(null);
 
   // 根据年月计算可选的日期
   const availableDays = useMemo(() => {
@@ -97,6 +137,23 @@ export function BaziTab() {
     }
   };
 
+  // 计算真太阳时偏差信息
+  const solarTimeOffset = useMemo(() => {
+    const offset = calculateTrueSolarTimeOffset(city.longitude, city.timezone);
+    const sign = offset >= 0 ? '+' : '';
+    return {
+      minutes: offset,
+      display: `${sign}${Math.round(offset)}分钟`,
+    };
+  }, [city]);
+
+  const handleCityChange = (cityName: string) => {
+    const selectedCity = CITIES.find(c => c.name === cityName);
+    if (selectedCity) {
+      setCity(selectedCity);
+    }
+  };
+
   const handleCalculate = async () => {
     if (!name.trim()) {
       setError('请输入姓名');
@@ -111,6 +168,7 @@ export function BaziTab() {
     setLoading(true);
     setError(null);
     setResult(null);
+    setTrueSolarInfo(null);
 
     try {
       const yearNum = parseInt(year);
@@ -118,12 +176,24 @@ export function BaziTab() {
       const dayNum = parseInt(day);
       const hourNum = parseInt(hour);
 
+      // 计算真太阳时
+      const adjusted = adjustTimeForTrueSolar(
+        yearNum, monthNum, dayNum, hourNum, 0,
+        solarTimeOffset.minutes
+      );
+
+      // 生成真太阳时信息
+      const offsetSign = solarTimeOffset.minutes >= 0 ? '+' : '';
+      setTrueSolarInfo(
+        `${city.name}经度 ${city.longitude.toFixed(2)}°，时差 ${offsetSign}${Math.round(solarTimeOffset.minutes)}分钟`
+      );
+
       const baziResult = await calculateBazi({
-        year: yearNum,
-        month: monthNum,
-        day: dayNum,
-        hour: hourNum,
-        minute: 0,
+        year: adjusted.year,
+        month: adjusted.month,
+        day: adjusted.day,
+        hour: adjusted.hour,
+        minute: adjusted.minute,
       });
 
       setResult(baziResult);
@@ -244,16 +314,35 @@ export function BaziTab() {
   return (
     <div className="tab-content">
       <div className="bazi-form">
-        <div className="form-group">
-          <label htmlFor="name">姓名</label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="请输入您的姓名"
-            disabled={loading}
-          />
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="name">姓名</label>
+            <input
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="请输入您的姓名"
+              disabled={loading}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="city">出生地</label>
+            <select
+              id="city"
+              value={city.name}
+              onChange={(e) => handleCityChange(e.target.value)}
+              disabled={loading}
+            >
+              {CITIES.map((c) => (
+                <option key={c.name} value={c.name}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+            <span className="timezone-hint">({city.timezone_abbr})</span>
+          </div>
         </div>
 
         <div className="date-inputs">
@@ -341,6 +430,12 @@ export function BaziTab() {
             <p className="bazi-datetime">
               公历：{result.solar.formatted}<br />
               农历：{result.lunar.formatted}（{result.lunar.sheng_xiao}年）
+              {trueSolarInfo && (
+                <>
+                  <br />
+                  <span className="true-solar-info">真太阳时：{trueSolarInfo}</span>
+                </>
+              )}
             </p>
           </div>
 

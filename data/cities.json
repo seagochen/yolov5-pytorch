@@ -1,0 +1,118 @@
+{
+  "cities": [
+    {
+      "name": "北京",
+      "name_en": "Beijing",
+      "country": "中国",
+      "longitude": 116.4074,
+      "latitude": 39.9042,
+      "timezone": 8,
+      "timezone_abbr": "CST"
+    },
+    {
+      "name": "上海",
+      "name_en": "Shanghai",
+      "country": "中国",
+      "longitude": 121.4737,
+      "latitude": 31.2304,
+      "timezone": 8,
+      "timezone_abbr": "CST"
+    },
+    {
+      "name": "广州",
+      "name_en": "Guangzhou",
+      "country": "中国",
+      "longitude": 113.2644,
+      "latitude": 23.1291,
+      "timezone": 8,
+      "timezone_abbr": "CST"
+    },
+    {
+      "name": "成都",
+      "name_en": "Chengdu",
+      "country": "中国",
+      "longitude": 104.0665,
+      "latitude": 30.5728,
+      "timezone": 8,
+      "timezone_abbr": "CST"
+    },
+    {
+      "name": "武汉",
+      "name_en": "Wuhan",
+      "country": "中国",
+      "longitude": 114.3055,
+      "latitude": 30.5928,
+      "timezone": 8,
+      "timezone_abbr": "CST"
+    },
+    {
+      "name": "沈阳",
+      "name_en": "Shenyang",
+      "country": "中国",
+      "longitude": 123.4315,
+      "latitude": 41.8057,
+      "timezone": 8,
+      "timezone_abbr": "CST"
+    },
+    {
+      "name": "哈尔滨",
+      "name_en": "Harbin",
+      "country": "中国",
+      "longitude": 126.6424,
+      "latitude": 45.7567,
+      "timezone": 8,
+      "timezone_abbr": "CST"
+    },
+    {
+      "name": "重庆",
+      "name_en": "Chongqing",
+      "country": "中国",
+      "longitude": 106.5516,
+      "latitude": 29.5630,
+      "timezone": 8,
+      "timezone_abbr": "CST"
+    },
+    {
+      "name": "东京",
+      "name_en": "Tokyo",
+      "country": "日本",
+      "longitude": 139.6917,
+      "latitude": 35.6895,
+      "timezone": 9,
+      "timezone_abbr": "JST"
+    },
+    {
+      "name": "大阪",
+      "name_en": "Osaka",
+      "country": "日本",
+      "longitude": 135.5023,
+      "latitude": 34.6937,
+      "timezone": 9,
+      "timezone_abbr": "JST"
+    },
+    {
+      "name": "札幌",
+      "name_en": "Sapporo",
+      "country": "日本",
+      "longitude": 141.3545,
+      "latitude": 43.0618,
+      "timezone": 9,
+      "timezone_abbr": "JST"
+    }
+  ],
+  "timezones": [
+    { "value": 5, "label": "东五区 (UTC+5)" },
+    { "value": 6, "label": "东六区 (UTC+6)" },
+    { "value": 7, "label": "东七区 (UTC+7)" },
+    { "value": 8, "label": "东八区 (UTC+8)" },
+    { "value": 9, "label": "东九区 (UTC+9)" },
+    { "value": 10, "label": "东十区 (UTC+10)" },
+    { "value": -5, "label": "西五区 (UTC-5)" },
+    { "value": -8, "label": "西八区 (UTC-8)" }
+  ],
+  "notes": {
+    "description": "真太阳时转换说明",
+    "formula": "真太阳时 = 标准时间 + (当地经度 - 时区中央经度) × 4分钟",
+    "timezone_central_longitude": "时区中央经度 = 时区值 × 15度，例如东八区中央经度为 8 × 15 = 120度"
+  }
+}

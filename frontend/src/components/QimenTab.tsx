@@ -1,6 +1,43 @@
 import { useState, useEffect, useMemo } from 'react';
 import { qimenPaipan, getQimenGuide } from '../api/client';
-import type { QimenResponse } from '../types';
+import type { QimenResponse, CityInfo } from '../types';
+
+// 城市数据
+const CITIES: CityInfo[] = [
+  { name: '北京', name_en: 'Beijing', country: '中国', longitude: 116.4074, latitude: 39.9042, timezone: 8, timezone_abbr: 'CST' },
+  { name: '上海', name_en: 'Shanghai', country: '中国', longitude: 121.4737, latitude: 31.2304, timezone: 8, timezone_abbr: 'CST' },
+  { name: '广州', name_en: 'Guangzhou', country: '中国', longitude: 113.2644, latitude: 23.1291, timezone: 8, timezone_abbr: 'CST' },
+  { name: '成都', name_en: 'Chengdu', country: '中国', longitude: 104.0665, latitude: 30.5728, timezone: 8, timezone_abbr: 'CST' },
+  { name: '武汉', name_en: 'Wuhan', country: '中国', longitude: 114.3055, latitude: 30.5928, timezone: 8, timezone_abbr: 'CST' },
+  { name: '沈阳', name_en: 'Shenyang', country: '中国', longitude: 123.4315, latitude: 41.8057, timezone: 8, timezone_abbr: 'CST' },
+  { name: '哈尔滨', name_en: 'Harbin', country: '中国', longitude: 126.6424, latitude: 45.7567, timezone: 8, timezone_abbr: 'CST' },
+  { name: '重庆', name_en: 'Chongqing', country: '中国', longitude: 106.5516, latitude: 29.5630, timezone: 8, timezone_abbr: 'CST' },
+  { name: '东京', name_en: 'Tokyo', country: '日本', longitude: 139.6917, latitude: 35.6895, timezone: 9, timezone_abbr: 'JST' },
+  { name: '大阪', name_en: 'Osaka', country: '日本', longitude: 135.5023, latitude: 34.6937, timezone: 9, timezone_abbr: 'JST' },
+  { name: '札幌', name_en: 'Sapporo', country: '日本', longitude: 141.3545, latitude: 43.0618, timezone: 9, timezone_abbr: 'JST' },
+];
+
+// 计算真太阳时偏差（分钟）
+const calculateTrueSolarTimeOffset = (longitude: number, timezone: number): number => {
+  const centralLongitude = timezone * 15;
+  return (longitude - centralLongitude) * 4;
+};
+
+// 根据标准时间和偏差计算真太阳时
+const adjustTimeForTrueSolar = (
+  year: number, month: number, day: number, hour: number, minute: number,
+  offsetMinutes: number
+): { year: number; month: number; day: number; hour: number; minute: number } => {
+  const date = new Date(year, month - 1, day, hour, minute);
+  date.setMinutes(date.getMinutes() + Math.round(offsetMinutes));
+  return {
+    year: date.getFullYear(),
+    month: date.getMonth() + 1,
+    day: date.getDate(),
+    hour: date.getHours(),
+    minute: date.getMinutes(),
+  };
+};
 
 // 十二时辰定义
 const SHICHEN = [
@@ -33,6 +70,7 @@ const getDaysInMonth = (year: number, month: number): number => {
 };
 
 export function QimenTab() {
+  const [city, setCity] = useState<CityInfo>(CITIES[0]);
   const [year, setYear] = useState('');
   const [month, setMonth] = useState('');
   const [day, setDay] = useState('');
@@ -42,6 +80,7 @@ export function QimenTab() {
   const [result, setResult] = useState<QimenResponse | null>(null);
   const [showGuide, setShowGuide] = useState(false);
   const [guideData, setGuideData] = useState<any>(null);
+  const [trueSolarInfo, setTrueSolarInfo] = useState<string | null>(null);
 
   // 加载指南数据
   useEffect(() => {
@@ -87,6 +126,23 @@ export function QimenTab() {
     }
   };
 
+  // 计算真太阳时偏差信息
+  const solarTimeOffset = useMemo(() => {
+    const offset = calculateTrueSolarTimeOffset(city.longitude, city.timezone);
+    const sign = offset >= 0 ? '+' : '';
+    return {
+      minutes: offset,
+      display: `${sign}${Math.round(offset)}分钟`,
+    };
+  }, [city]);
+
+  const handleCityChange = (cityName: string) => {
+    const selectedCity = CITIES.find(c => c.name === cityName);
+    if (selectedCity) {
+      setCity(selectedCity);
+    }
+  };
+
   const handleCalculate = async () => {
     if (!year || !month || !day || !hour) {
       setError('请填写完整的日期和时辰');
@@ -96,6 +152,7 @@ export function QimenTab() {
     setLoading(true);
     setError(null);
     setResult(null);
+    setTrueSolarInfo(null);
 
     try {
       const yearNum = parseInt(year);
@@ -103,12 +160,24 @@ export function QimenTab() {
       const dayNum = parseInt(day);
       const hourNum = parseInt(hour);
 
+      // 计算真太阳时
+      const adjusted = adjustTimeForTrueSolar(
+        yearNum, monthNum, dayNum, hourNum, 0,
+        solarTimeOffset.minutes
+      );
+
+      // 生成真太阳时信息
+      const offsetSign = solarTimeOffset.minutes >= 0 ? '+' : '';
+      setTrueSolarInfo(
+        `${city.name}经度 ${city.longitude.toFixed(2)}°，时差 ${offsetSign}${Math.round(solarTimeOffset.minutes)}分钟`
+      );
+
       const qimenResult = await qimenPaipan({
-        year: yearNum,
-        month: monthNum,
-        day: dayNum,
-        hour: hourNum,
-        minute: 0,
+        year: adjusted.year,
+        month: adjusted.month,
+        day: adjusted.day,
+        hour: adjusted.hour,
+        minute: adjusted.minute,
       });
 
       setResult(qimenResult);
@@ -402,6 +471,25 @@ export function QimenTab() {
           </p>
         </div>
 
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="qm-city">所在地</label>
+            <select
+              id="qm-city"
+              value={city.name}
+              onChange={(e) => handleCityChange(e.target.value)}
+              disabled={loading}
+            >
+              {CITIES.map((c) => (
+                <option key={c.name} value={c.name}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+            <span className="timezone-hint">({city.timezone_abbr})</span>
+          </div>
+        </div>
+
         <div className="date-inputs">
           <div className="form-group">
             <label htmlFor="qm-year">年</label>
@@ -488,6 +576,9 @@ export function QimenTab() {
               <p>时间：{result.date_time}</p>
               <p>节气：{result.term} / 元运：{result.yuan}</p>
               <p>遁式：{result.dun_type} / 局数：{result.ju_number}局</p>
+              {trueSolarInfo && (
+                <p className="true-solar-info">真太阳时：{trueSolarInfo}</p>
+              )}
             </div>
           </div>
 

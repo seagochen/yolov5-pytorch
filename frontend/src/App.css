@@ -517,6 +517,37 @@
   font-weight: 600;
 }
 
+.form-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.form-row .form-group {
+  flex: 1;
+  min-width: 150px;
+  margin-bottom: 0;
+  position: relative;
+}
+
+.timezone-hint {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(20%);
+  font-size: 0.85rem;
+  color: var(--color-dark);
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.true-solar-info {
+  color: #1976d2;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
 .date-inputs {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
