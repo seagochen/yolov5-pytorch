@@ -190,6 +190,7 @@ class GongInfo(BaseModel):
     """宫位信息"""
     gong_name: str
     ba_gua: str
+    direction: str  # 方位
     di_pan: str
     tian_pan: str
     ba_men: str

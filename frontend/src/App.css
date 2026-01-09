@@ -1015,6 +1015,15 @@
   color: var(--color-text);
 }
 
+.gong-direction {
+  background: #e3f2fd;
+  color: #1565c0;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
 .zhifu-badge {
   background: var(--color-primary);
   color: white;
@@ -1274,6 +1283,139 @@
 
 .guide-tip strong {
   color: #d4421a;
+}
+
+.guide-content h5 {
+  color: var(--color-text);
+  font-size: 1rem;
+  margin: 1.2rem 0 0.6rem;
+  font-weight: 600;
+}
+
+/* 寻物占卜指南样式 */
+.lost-item-section {
+  background: #f8f9fa;
+  padding: 1.2rem;
+  border-radius: 12px;
+  margin-top: 1rem;
+}
+
+.item-categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.8rem;
+  margin: 0.8rem 0;
+}
+
+.item-category {
+  background: white;
+  padding: 0.8rem;
+  border-radius: 8px;
+  border-left: 3px solid var(--color-primary);
+}
+
+.item-category strong {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: var(--color-text);
+}
+
+.item-category .yongshen-gong {
+  display: inline-block;
+  background: #e3f2fd;
+  color: #1565c0;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.item-category p {
+  font-size: 0.85rem;
+  margin: 0;
+  color: var(--color-dark);
+}
+
+.judgment-rules {
+  list-style: none;
+  padding: 0;
+  margin: 0.8rem 0;
+}
+
+.judgment-rules li {
+  background: white;
+  padding: 0.8rem;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.judgment-rules li strong {
+  flex: 1;
+  min-width: 200px;
+}
+
+.judgment-rules li p {
+  width: 100%;
+  margin: 0.3rem 0 0;
+  font-size: 0.9rem;
+}
+
+.result-tag {
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.result-tag.ji {
+  background: #e8f5e9;
+  color: #2d8659;
+}
+
+.result-tag.xiong {
+  background: #ffebee;
+  color: #d4421a;
+}
+
+.result-tag.ping {
+  background: #fff9e6;
+  color: #b8860b;
+}
+
+.location-hints {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.6rem;
+  margin: 0.8rem 0;
+}
+
+.location-hint {
+  background: white;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.hint-gong {
+  background: #e3f2fd;
+  color: #1565c0;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.hint-locations {
+  font-size: 0.9rem;
+  color: var(--color-dark);
 }
 
 @media (max-width: 768px) {

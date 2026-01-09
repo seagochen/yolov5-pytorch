@@ -53,6 +53,19 @@ class QimenDunjia:
         9: '离'
     }
 
+    # 九宫方位对应
+    DIRECTION = {
+        1: '北',
+        2: '西南',
+        3: '东',
+        4: '东南',
+        5: '中',
+        6: '西北',
+        7: '西',
+        8: '东北',
+        9: '南'
+    }
+
     # 地盘三奇六仪固定排列（阳遁一局）
     DI_PAN_YANG_1 = {
         1: '戊',
@@ -477,6 +490,7 @@ class QimenDunjia:
             jiu_gong_info[gong] = {
                 'gong_name': cls.JIU_GONG[gong],
                 'ba_gua': cls.BA_GUA[gong],
+                'direction': cls.DIRECTION[gong],
                 'di_pan': di,
                 'tian_pan': tian,
                 'ba_men': men,

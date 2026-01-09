@@ -283,5 +283,186 @@
       "参考用神含义，结合实际情况分析",
       "查看最佳方位和不利方位的建议"
     ]
+  },
+  "lost_item_divination": {
+    "title": "寻物占卜指南",
+    "description": "奇门遁甲可用于预测丢失物品的方位，通过确定用神宫位来判断物品所在方向和寻找难度。",
+    "directions": {
+      "title": "九宫方位对照",
+      "items": [
+        {"gong": 1, "name": "坎一宫", "direction": "北", "distance": "中等距离"},
+        {"gong": 2, "name": "坤二宫", "direction": "西南", "distance": "较远"},
+        {"gong": 3, "name": "震三宫", "direction": "东", "distance": "中等距离"},
+        {"gong": 4, "name": "巽四宫", "direction": "东南", "distance": "较远"},
+        {"gong": 5, "name": "中五宫", "direction": "中央/原地附近", "distance": "很近"},
+        {"gong": 6, "name": "乾六宫", "direction": "西北", "distance": "较远"},
+        {"gong": 7, "name": "兑七宫", "direction": "西", "distance": "中等距离"},
+        {"gong": 8, "name": "艮八宫", "direction": "东北", "distance": "较远"},
+        {"gong": 9, "name": "离九宫", "direction": "南", "distance": "中等距离"}
+      ]
+    },
+    "item_categories": {
+      "title": "物品类别对应用神",
+      "categories": [
+        {
+          "type": "金银首饰、贵金属",
+          "yongshen": "乾六宫、兑七宫",
+          "element": "金",
+          "description": "金属类物品以金为用神，看乾宫或兑宫"
+        },
+        {
+          "type": "文书证件、书籍",
+          "yongshen": "巽四宫",
+          "element": "木",
+          "description": "文书类以巽宫为用神，巽主文书消息"
+        },
+        {
+          "type": "电子产品、电器",
+          "yongshen": "离九宫",
+          "element": "火",
+          "description": "与电、光有关的物品以离宫为用神"
+        },
+        {
+          "type": "衣物布料、软物",
+          "yongshen": "坤二宫",
+          "element": "土",
+          "description": "衣物、布匹等柔软物品以坤宫为用神"
+        },
+        {
+          "type": "车辆交通工具",
+          "yongshen": "震三宫",
+          "element": "木",
+          "description": "车辆以震宫为用神，震主动、行动"
+        },
+        {
+          "type": "水相关物品、液体",
+          "yongshen": "坎一宫",
+          "element": "水",
+          "description": "与水相关的物品以坎宫为用神"
+        },
+        {
+          "type": "玉石、陶器、房产证",
+          "yongshen": "艮八宫",
+          "element": "土",
+          "description": "土石类、不动产相关以艮宫为用神"
+        },
+        {
+          "type": "一般物品",
+          "yongshen": "值符落宫",
+          "element": "无",
+          "description": "一般物品看值符所落宫位的方位"
+        }
+      ]
+    },
+    "judgment_rules": {
+      "title": "寻物吉凶判断",
+      "rules": [
+        {
+          "condition": "用神宫遇生门、开门、休门",
+          "result": "吉",
+          "meaning": "容易找到，物品保存完好"
+        },
+        {
+          "condition": "用神宫遇死门",
+          "result": "凶",
+          "meaning": "难以找到，或物品已损坏、被处理"
+        },
+        {
+          "condition": "用神宫遇杜门",
+          "result": "平",
+          "meaning": "物品被藏匿，需仔细搜寻"
+        },
+        {
+          "condition": "用神宫遇惊门",
+          "result": "凶",
+          "meaning": "物品可能被盗，或已被他人拿走"
+        },
+        {
+          "condition": "用神宫遇伤门",
+          "result": "凶",
+          "meaning": "物品可能已损坏"
+        },
+        {
+          "condition": "用神宫遇景门",
+          "result": "平",
+          "meaning": "物品在明显处，但可能被遮挡"
+        },
+        {
+          "condition": "用神宫有值符",
+          "result": "吉",
+          "meaning": "贵人相助，容易找回"
+        },
+        {
+          "condition": "用神宫有白虎",
+          "result": "凶",
+          "meaning": "物品可能被抢夺或丢失严重"
+        },
+        {
+          "condition": "用神宫有玄武",
+          "result": "凶",
+          "meaning": "物品可能被盗，小偷所为"
+        }
+      ]
+    },
+    "location_hints": {
+      "title": "具体位置参考",
+      "hints": [
+        {
+          "gong": 1,
+          "element": "水",
+          "locations": ["卫生间", "水池附近", "北面房间", "潮湿处", "地下"]
+        },
+        {
+          "gong": 2,
+          "element": "土",
+          "locations": ["西南房间", "厨房", "储藏室", "柜子底层", "地面"]
+        },
+        {
+          "gong": 3,
+          "element": "木",
+          "locations": ["东面房间", "门口", "木制家具", "鞋柜", "车库"]
+        },
+        {
+          "gong": 4,
+          "element": "木",
+          "locations": ["东南角", "书房", "办公桌", "文件柜", "窗台"]
+        },
+        {
+          "gong": 5,
+          "element": "土",
+          "locations": ["房屋中央", "客厅", "原来放置处附近", "身边不远"]
+        },
+        {
+          "gong": 6,
+          "element": "金",
+          "locations": ["西北角", "主卧", "保险柜", "金属容器", "高处"]
+        },
+        {
+          "gong": 7,
+          "element": "金",
+          "locations": ["西面房间", "化妆台", "镜子附近", "金属架子"]
+        },
+        {
+          "gong": 8,
+          "element": "土",
+          "locations": ["东北角", "山墙边", "阁楼", "石头附近", "小房间"]
+        },
+        {
+          "gong": 9,
+          "element": "火",
+          "locations": ["南面房间", "阳台", "厨房灶台", "电器旁", "明亮处"]
+        }
+      ]
+    },
+    "divination_steps": {
+      "title": "寻物步骤",
+      "steps": [
+        "确定丢失物品的类别，找到对应用神宫位",
+        "查看用神宫位的方位（北、南、东、西等）",
+        "观察用神宫的八门，判断找回难度",
+        "参考八神状态，了解物品当前情况",
+        "结合具体位置提示，缩小搜索范围"
+      ]
+    }
   }
 }

@@ -175,6 +175,7 @@ export interface CitiesData {
 export interface GongInfo {
   gong_name: string;
   ba_gua: string;
+  direction: string;  // 方位
   di_pan: string;
   tian_pan: string;
   ba_men: string;

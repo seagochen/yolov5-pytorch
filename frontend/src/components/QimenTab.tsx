@@ -281,6 +281,7 @@ export function QimenTab() {
                 >
                   <div className="gong-header">
                     <span className="gong-name">{gong.gong_name}</span>
+                    <span className="gong-direction">{gong.direction}</span>
                     {isZhiFu && <span className="zhifu-badge">值符</span>}
                   </div>
                   <div className="gong-content">
@@ -450,6 +451,75 @@ export function QimenTab() {
                           <li key={idx}>{step}</li>
                         ))}
                       </ol>
+                    </section>
+                  )}
+
+                  {/* 寻物占卜指南 */}
+                  {guideData.lost_item_divination && (
+                    <section className="lost-item-section">
+                      <h4>{guideData.lost_item_divination.title}</h4>
+                      <p>{guideData.lost_item_divination.description}</p>
+
+                      {/* 物品类别对应用神 */}
+                      {guideData.lost_item_divination.item_categories && (
+                        <>
+                          <h5>{guideData.lost_item_divination.item_categories.title}</h5>
+                          <div className="item-categories">
+                            {guideData.lost_item_divination.item_categories.categories.map((cat: any, idx: number) => (
+                              <div key={idx} className="item-category">
+                                <strong>{cat.type}</strong>
+                                <span className="yongshen-gong">{cat.yongshen}</span>
+                                <p>{cat.description}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </>
+                      )}
+
+                      {/* 寻物吉凶判断 */}
+                      {guideData.lost_item_divination.judgment_rules && (
+                        <>
+                          <h5>{guideData.lost_item_divination.judgment_rules.title}</h5>
+                          <ul className="judgment-rules">
+                            {guideData.lost_item_divination.judgment_rules.rules.map((rule: any, idx: number) => (
+                              <li key={idx} className={`rule-${rule.result === '吉' ? 'ji' : rule.result === '凶' ? 'xiong' : 'ping'}`}>
+                                <strong>{rule.condition}</strong>
+                                <span className={`result-tag ${rule.result === '吉' ? 'ji' : rule.result === '凶' ? 'xiong' : 'ping'}`}>
+                                  {rule.result}
+                                </span>
+                                <p>{rule.meaning}</p>
+                              </li>
+                            ))}
+                          </ul>
+                        </>
+                      )}
+
+                      {/* 具体位置参考 */}
+                      {guideData.lost_item_divination.location_hints && (
+                        <>
+                          <h5>{guideData.lost_item_divination.location_hints.title}</h5>
+                          <div className="location-hints">
+                            {guideData.lost_item_divination.location_hints.hints.map((hint: any, idx: number) => (
+                              <div key={idx} className="location-hint">
+                                <span className="hint-gong">{hint.gong}宫（{hint.element}）</span>
+                                <span className="hint-locations">{hint.locations.join('、')}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </>
+                      )}
+
+                      {/* 寻物步骤 */}
+                      {guideData.lost_item_divination.divination_steps && (
+                        <>
+                          <h5>{guideData.lost_item_divination.divination_steps.title}</h5>
+                          <ol>
+                            {guideData.lost_item_divination.divination_steps.steps.map((step: string, idx: number) => (
+                              <li key={idx}>{step}</li>
+                            ))}
+                          </ol>
+                        </>
+                      )}
                     </section>
                   )}
                 </>
