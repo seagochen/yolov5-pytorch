@@ -1,4 +1,5 @@
-google-generativeai
+openai
 fastapi
 uvicorn[standard]
 pydantic
+pyyaml

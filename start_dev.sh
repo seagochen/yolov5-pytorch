@@ -19,11 +19,10 @@ echo -e "${GREEN}   IChing AI 解卦系统 - 开发环境${NC}"
 echo -e "${GREEN}========================================${NC}"
 echo
 
-# 检查 gemini.json 是否存在
-if [ ! -f "gemini.json" ]; then
-    echo -e "${RED}错误: gemini.json 文件不存在${NC}"
-    echo -e "${YELLOW}请复制 gemini.json.example 为 gemini.json 并填入您的 API Key${NC}"
-    echo "  cp gemini.json.example gemini.json"
+# 检查 config.yaml 是否存在
+if [ ! -f "config.yaml" ]; then
+    echo -e "${RED}错误: config.yaml 文件不存在${NC}"
+    echo -e "${YELLOW}请创建 config.yaml 并配置 AI 服务参数${NC}"
     exit 1
 fi
 

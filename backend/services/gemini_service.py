@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-Gemini AI 服务 - 处理 AI 解卦
+AI 服务 - 通过 kimi-code 代理处理 AI 解卦
 """
-import google.generativeai as genai
 from typing import Dict, List, Optional
 
-from config import settings, get_gemini_model
+from config import settings, get_ai_client
 from prompts import SYSTEM_PROMPT, get_interpretation_prompt, get_summary_prompt
 
 
 class GeminiService:
-    """Gemini AI 服务类"""
+    """AI 服务类（通过 kimi-code 代理）"""
 
     async def interpret_gua(
         self,
@@ -20,36 +19,39 @@ class GeminiService:
         changing_lines: List[Dict]
     ) -> Dict[str, str]:
         """
-        使用 Gemini AI 解读卦象
+        使用 AI 解读卦象
         """
-        model = get_gemini_model()
+        client = get_ai_client()
         generation_config = settings.generation_config
 
         # 生成解卦提示词
         user_prompt = get_interpretation_prompt(question, ben_gua, bian_gua, changing_lines)
 
         try:
-            # 调用 Gemini API
-            response = model.generate_content(
-                [SYSTEM_PROMPT, user_prompt],
-                generation_config=genai.types.GenerationConfig(
-                    temperature=generation_config['temperature'],
-                    max_output_tokens=generation_config['max_output_tokens'],
-                )
+            # 调用 AI API
+            response = client.chat.completions.create(
+                model=settings.model_name,
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": user_prompt},
+                ],
+                temperature=generation_config['temperature'],
+                max_tokens=generation_config['max_tokens'],
             )
 
-            interpretation = response.text
+            interpretation = response.choices[0].message.content
 
             # 生成简短总结
             summary_prompt = get_summary_prompt(interpretation)
-            summary_response = model.generate_content(
-                summary_prompt,
-                generation_config=genai.types.GenerationConfig(
-                    temperature=0.3,
-                    max_output_tokens=200,
-                )
+            summary_response = client.chat.completions.create(
+                model=settings.model_name,
+                messages=[
+                    {"role": "user", "content": summary_prompt},
+                ],
+                temperature=0.3,
+                max_tokens=200,
             )
-            summary = summary_response.text
+            summary = summary_response.choices[0].message.content
 
             return {
                 'interpretation': interpretation,
@@ -57,7 +59,7 @@ class GeminiService:
             }
 
         except Exception as e:
-            raise Exception(f"Gemini API 调用失败: {str(e)}")
+            raise Exception(f"AI API 调用失败: {str(e)}")
 
     def generate_response(
         self,
@@ -67,31 +69,26 @@ class GeminiService:
         """
         通用生成响应
         """
-        model = get_gemini_model()
+        client = get_ai_client()
         generation_config = settings.generation_config
 
         try:
+            messages = []
             if system_instruction:
-                response = model.generate_content(
-                    [system_instruction, prompt],
-                    generation_config=genai.types.GenerationConfig(
-                        temperature=generation_config['temperature'],
-                        max_output_tokens=generation_config['max_output_tokens'],
-                    )
-                )
-            else:
-                response = model.generate_content(
-                    prompt,
-                    generation_config=genai.types.GenerationConfig(
-                        temperature=generation_config['temperature'],
-                        max_output_tokens=generation_config['max_output_tokens'],
-                    )
-                )
+                messages.append({"role": "system", "content": system_instruction})
+            messages.append({"role": "user", "content": prompt})
 
-            return response.text
+            response = client.chat.completions.create(
+                model=settings.model_name,
+                messages=messages,
+                temperature=generation_config['temperature'],
+                max_tokens=generation_config['max_tokens'],
+            )
+
+            return response.choices[0].message.content
 
         except Exception as e:
-            raise Exception(f"Gemini API 调用失败: {str(e)}")
+            raise Exception(f"AI API 调用失败: {str(e)}")
 
 
 # 全局单例
