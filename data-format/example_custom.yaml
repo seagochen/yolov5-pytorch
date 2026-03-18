@@ -1,0 +1,66 @@
+# Custom Dataset Configuration Example
+#
+# This is a template for creating your own dataset config.
+# Supports both Roboflow exports and manually organized datasets.
+#
+# Usage:
+#   python scripts/train.py --config training.yaml --data data-format/example_custom.yaml
+#
+# ==========================================
+# Directory Structure (Option A - Parallel):
+# ==========================================
+#   my_dataset/
+#   ├── data.yaml            # this file
+#   ├── images/
+#   │   ├── train/
+#   │   │   ├── img001.jpg
+#   │   │   └── ...
+#   │   └── val/
+#   │       ├── img100.jpg
+#   │       └── ...
+#   └── labels/
+#       ├── train/
+#       │   ├── img001.txt   # one .txt per image
+#       │   └── ...
+#       └── val/
+#           ├── img100.txt
+#           └── ...
+#
+# ==========================================
+# Directory Structure (Option B - Nested):
+# ==========================================
+#   my_dataset/
+#   ├── data.yaml
+#   ├── train/
+#   │   ├── images/
+#   │   └── labels/
+#   └── val/
+#       ├── images/
+#       └── labels/
+#
+# ==========================================
+# Label Format (one object per line):
+# ==========================================
+#   class_id  center_x  center_y  width  height
+#
+#   - All coordinates normalized to [0, 1]
+#   - class_id is 0-indexed integer
+#   - Example: 0 0.5 0.5 0.3 0.4
+#
+
+path: .                   # dataset root dir (absolute or relative to this YAML)
+train: images/train       # training images
+val: images/val           # validation images
+test:                     # test images (optional)
+
+# Also supported: text file listing image paths
+# train: train.txt        # one image path per line
+
+nc: 3                     # number of classes
+names:
+  0: cat
+  1: dog
+  2: bird
+
+# Alternative: names as a list
+# names: ['cat', 'dog', 'bird']

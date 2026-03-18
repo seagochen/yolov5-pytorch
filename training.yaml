@@ -1,0 +1,58 @@
+# YOLOv5 Training Configuration
+# Default config for YOLOv5s with COCO dataset
+
+model:
+  # Model variant - controls network width and depth:
+  #   n (nano):   width=0.25, depth=0.33 -   1.9M params -  fastest
+  #   s (small):  width=0.50, depth=0.33 -   7.4M params -  balanced (default)
+  #   m (medium): width=0.75, depth=0.67 -  21.6M params
+  #   l (large):  width=1.00, depth=1.00 -  47.2M params
+  #   x (xlarge): width=1.25, depth=1.33 -  87.8M params -  most accurate
+  variant: s
+  img_size: 640           # Input image size (must be multiple of 32)
+
+training:
+  epochs: 100             # Number of training epochs
+  batch_size: 16          # Batch size per GPU
+  lr: 0.01                # Initial learning rate
+  weight_decay: 0.0005    # Weight decay (L2 regularization)
+  warmup_epochs: 3        # Linear warmup epochs
+  grad_clip: 10.0         # Gradient clipping max norm (0 to disable)
+
+  # Loss weights
+  lambda_box: 0.05        # Box regression loss weight (CIoU)
+  lambda_obj: 1.0         # Objectness loss weight
+  lambda_cls: 0.5         # Classification loss weight
+
+  # Learning rate scheduling
+  patience: 5             # Epochs without improvement before LR reduction
+  lr_factor: 0.1          # LR reduction factor
+  min_lr: 0.0000001       # Minimum learning rate
+
+  # Regularization
+  label_smoothing: 0.0    # Label smoothing factor (0.0 to disable)
+
+  # Advanced training features
+  amp: false              # Automatic Mixed Precision (FP16)
+  ema: false              # Exponential Moving Average
+  ema_decay: 0.9999       # EMA decay factor
+  accumulation_steps: 1   # Gradient accumulation steps
+  early_stopping: false   # Enable early stopping
+  max_lr_reductions: 3    # Max LR reductions before early stop
+
+  # Logging and evaluation
+  eval_interval: 5        # Compute full metrics every N epochs (0=last only)
+  conf_thres: 0.001       # Confidence threshold for evaluation
+  iou_thres: 0.6          # NMS IoU threshold
+  plot_samples: 16        # Number of detection samples to visualize
+
+data:
+  data: data-format/coco128.yaml  # Dataset config YAML path
+  workers: 8              # Dataloader workers
+  cache: false            # Cache images in RAM
+
+# Output
+save_dir: runs/train      # Base save directory
+name: exp                 # Experiment name
+device: "0"               # CUDA device (0, 0,1,2,3, or cpu)
+seed: 0                   # Random seed for reproducibility

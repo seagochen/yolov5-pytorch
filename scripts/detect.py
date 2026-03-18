@@ -27,7 +27,7 @@ def parse_args():
 
     parser.add_argument('--weights', type=str, required=True, help='Model weights path')
     parser.add_argument('--source', type=str, required=True, help='Source: image/folder/video')
-    parser.add_argument('--data', type=str, default='data/coco.yaml', help='Dataset YAML')
+    parser.add_argument('--data', type=str, default='data-format/coco128.yaml', help='Dataset YAML')
     parser.add_argument('--img-size', type=int, default=640, help='Inference size')
     parser.add_argument('--conf-thres', type=float, default=0.5, help='Confidence threshold')
     parser.add_argument('--iou-thres', type=float, default=0.5, help='NMS IoU threshold')

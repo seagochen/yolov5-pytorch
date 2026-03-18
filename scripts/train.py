@@ -17,6 +17,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 import numpy as np
+import yaml
 
 from yolov5.models import create_yolov5
 from yolov5.data import COCODetectionDataset, collate_fn
@@ -40,33 +41,82 @@ from yolov5.utils.plots import (
 )
 
 
+def load_config(config_path: str) -> dict:
+    """Load configuration from YAML file."""
+    with open(config_path, 'r') as f:
+        return yaml.safe_load(f)
+
+
+def merge_config(args, config: dict):
+    """
+    Merge YAML config values into argparse args.
+
+    YAML sections (model, training, data) are flattened.
+    Top-level keys (save_dir, name, device, seed) are also merged.
+    Command-line explicit arguments take precedence over config file.
+    """
+    # Mapping from YAML key -> argparse attr (for keys with different names)
+    key_map = {
+        'data': 'data',             # data.data -> args.data
+        'save_dir': 'project',      # save_dir -> args.project
+    }
+
+    # Flatten sections
+    flat = {}
+    for section in ['model', 'training', 'data']:
+        if section in config:
+            for key, value in config[section].items():
+                flat[key] = value
+
+    # Top-level keys
+    for key in ['save_dir', 'name', 'device', 'seed']:
+        if key in config:
+            flat[key] = config[key]
+
+    # Apply to args
+    for key, value in flat.items():
+        # Map YAML key to argparse attr name
+        attr = key_map.get(key, key)
+        # Convert hyphens to underscores (argparse convention)
+        attr = attr.replace('-', '_')
+
+        if hasattr(args, attr):
+            setattr(args, attr, value)
+
+    return args
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description='YOLOv5 Training')
 
-    # 数据
-    parser.add_argument('--data', type=str, default='data/coco.yaml', help='Dataset config YAML')
+    # Config file
+    parser.add_argument('--config', type=str, default='',
+                        help='Training config YAML (e.g. training.yaml)')
+
+    # Data
+    parser.add_argument('--data', type=str, default='data-format/coco128.yaml', help='Dataset config YAML')
     parser.add_argument('--img-size', type=int, default=640, help='Input image size')
     parser.add_argument('--batch-size', type=int, default=16, help='Batch size')
     parser.add_argument('--workers', type=int, default=8, help='Dataloader workers')
     parser.add_argument('--cache', action='store_true', help='Cache images')
 
-    # 模型
+    # Model
     parser.add_argument('--variant', type=str, default='s',
                         choices=['n', 's', 'm', 'l', 'x'], help='Model variant')
 
-    # 训练
+    # Training
     parser.add_argument('--epochs', type=int, default=100, help='Training epochs')
     parser.add_argument('--lr', type=float, default=1e-2, help='Initial learning rate')
     parser.add_argument('--weight-decay', type=float, default=5e-4, help='Weight decay')
     parser.add_argument('--warmup-epochs', type=int, default=3, help='Warmup epochs')
     parser.add_argument('--grad-clip', type=float, default=10.0, help='Gradient clipping')
 
-    # 损失权重
+    # Loss weights
     parser.add_argument('--lambda-box', type=float, default=0.05, help='Box loss weight')
     parser.add_argument('--lambda-obj', type=float, default=1.0, help='Objectness loss weight')
     parser.add_argument('--lambda-cls', type=float, default=0.5, help='Classification loss weight')
 
-    # 微调
+    # LR scheduling & early stopping
     parser.add_argument('--patience', type=int, default=5, help='LR plateau patience')
     parser.add_argument('--lr-factor', type=float, default=0.1, help='LR reduction factor')
     parser.add_argument('--min-lr', type=float, default=1e-7, help='Minimum learning rate')
@@ -78,13 +128,13 @@ def parse_args():
     parser.add_argument('--ema', action='store_true', help='Model EMA')
     parser.add_argument('--ema-decay', type=float, default=0.9999, help='EMA decay')
 
-    # 评估
+    # Evaluation
     parser.add_argument('--eval-interval', type=int, default=5, help='Eval every N epochs')
     parser.add_argument('--conf-thres', type=float, default=0.001, help='Eval confidence threshold')
     parser.add_argument('--iou-thres', type=float, default=0.6, help='NMS IoU threshold')
     parser.add_argument('--plot-samples', type=int, default=16, help='Vis samples count')
 
-    # 其他
+    # Output
     parser.add_argument('--project', type=str, default='runs/train', help='Save directory')
     parser.add_argument('--name', type=str, default='exp', help='Experiment name')
     parser.add_argument('--resume', type=str, default='', help='Resume from exp name')
@@ -92,7 +142,22 @@ def parse_args():
     parser.add_argument('--seed', type=int, default=0, help='Random seed')
     parser.add_argument('--exist-ok', action='store_true', help='Allow existing dir')
 
-    return parser.parse_args()
+    args = parser.parse_args()
+
+    # Load and merge config file if provided
+    if args.config:
+        config_path = Path(args.config)
+        if not config_path.exists():
+            # Try relative to project root
+            config_path = ROOT / args.config
+        if config_path.exists():
+            print(f'Loading config from {config_path}')
+            config = load_config(str(config_path))
+            args = merge_config(args, config)
+        else:
+            print(f'WARNING: Config file not found: {args.config}')
+
+    return args
 
 
 def setup_device(device_str: str):
